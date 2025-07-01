@@ -1,0 +1,69 @@
+---
+description: tech stack
+globs: 
+alwaysApply: false
+---
+# 기술 스택 (Tech Stack)
+
+## 프론트엔드 (Frontend)
+
+### 핵심 기술
+- **언어**: JavaScript (ES2022+)
+- **프레임워크**: React 19.x
+- **상태 관리**: TanStack Query v5.x (React Query)
+- **css**: tailwindcss v4.x
+- **로깅**: Console API + 환경별 로그 레벨
+- **주의**: 타입스크립트등 과도한 세팅 하지 말 것 
+
+### 📋 스타일 관리 원칙
+- **금지**: JavaScript에서 인라인 스타일(`style={{}}`) 하드코딩
+- **권장**: Tailwind CSS 클래스명 활용
+- **예외**: 동적 값이 필요한 경우에만 CSS 변수 활용
+
+## 필수 패키지 설치
+
+```bash
+# React 19 설치
+npm install --save-exact react@^19.0.0 react-dom@^19.0.0
+
+# TanStack Query v5 설치
+npm install @tanstack/react-query@^5.60.5
+npm install @tanstack/react-query-devtools
+```
+
+## 기본 설정
+
+### QueryClient 초기화
+```javascript
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+      retry: 3,
+    },
+  },
+})
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      {/* 앱 컴포넌트들 */}
+    </QueryClientProvider>
+  )
+}
+```
+
+### 간단한 로거
+```javascript
+export const logger = {
+  info: (msg, ...args) => console.info(`[INFO] ${msg}`, ...args),
+  warn: (msg, ...args) => console.warn(`[WARN] ${msg}`, ...args),
+  error: (msg, ...args) => console.error(`[ERROR] ${msg}`, ...args),
+}
+```
+
+## 개발 도구
+- React DevTools
+- TanStack Query DevTools

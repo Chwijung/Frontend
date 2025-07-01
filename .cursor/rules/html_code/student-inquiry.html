@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>수강생 문의 관리 - AI-X 운영 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      overflow-x: hidden;
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 to-blue-100">
+  <!-- 헤더 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <button onclick="goBackToMain()" class="text-emerald-600 hover:text-emerald-800">
+            ← 메인으로
+          </button>
+          <h1 class="text-2xl font-bold text-emerald-700">💬 수강생 문의 관리</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">운영진: 권회은</span>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm text-red-600 font-medium">미답변 5개</span>
+            <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto p-6 space-y-6">
+    <!-- 페이지 헤더 -->
+    <header class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">수강생 문의 관리</h2>
+          <p class="text-gray-600">AI-X 3기 수강생들의 문의사항을 확인하고 답변하세요</p>
+        </div>
+        <div class="text-right">
+          <div class="text-2xl font-bold text-emerald-600">12</div>
+          <div class="text-sm text-gray-500">총 문의</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 통계 카드 -->
+    <section class="grid md:grid-cols-4 gap-6">
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">미답변 문의</p>
+            <p class="text-2xl font-bold text-red-600">5</p>
+          </div>
+          <div class="bg-red-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">답변 완료</p>
+            <p class="text-2xl font-bold text-green-600">7</p>
+          </div>
+          <div class="bg-green-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 필터 및 검색 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex flex-wrap gap-4 items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <select id="statusFilter" class="border border-gray-300 rounded-lg px-3 py-2">
+            <option value="all">전체 상태</option>
+            <option value="pending">미답변</option>
+            <option value="answered">답변완료</option>
+            <option value="closed">종료</option>
+          </select>
+          
+          <select id="categoryFilter" class="border border-gray-300 rounded-lg px-3 py-2">
+            <option value="all">전체 카테고리</option>
+            <option value="technical">기술 문의</option>
+            <option value="assignment">과제 관련</option>
+            <option value="schedule">일정 문의</option>
+            <option value="mentoring">멘토링</option>
+            <option value="other">기타</option>
+          </select>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <input type="text" placeholder="학생명 또는 내용 검색" class="border border-gray-300 rounded-lg px-3 py-2 w-64">
+          <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+            검색
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 문의 목록 -->
+    <section class="space-y-4">
+      <!-- 미답변 문의 1 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미답변</span>
+              <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">기술 문의</span>
+              <span class="text-sm text-gray-500">2시간 전</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">김하늘 - 프로젝트 환경 설정 오류</h3>
+            <p class="text-gray-600 mb-3">안녕하세요, 프로젝트 개발 환경을 설정하는데 Docker 컨테이너가 계속 실행되지 않습니다. 로그를 확인해보니 포트 충돌 오류가 발생하는 것 같은데, 어떻게 해결해야 할까요?</p>
+            <div class="flex items-center space-x-4 text-sm text-gray-500">
+              <span>📧 khaneul@email.com</span>
+              <span>📱 010-1234-5678</span>
+              <span>🏷️ 1조</span>
+            </div>
+          </div>
+          <div class="ml-4">
+            <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 mb-2">
+              답변하기
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 미답변 문의 2 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미답변</span>
+              <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">과제 관련</span>
+              <span class="text-sm text-gray-500">5시간 전</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">이지윤 - 최종 프로젝트 주제 변경 요청</h3>
+            <p class="text-gray-600 mb-3">멘토님과 상의 후 현재 진행 중인 AI 챗봇 프로젝트에서 추천 시스템으로 주제를 변경하고 싶습니다. 변경 가능한지 확인 부탁드립니다.</p>
+            <div class="flex items-center space-x-4 text-sm text-gray-500">
+              <span>📧 jiyoon@email.com</span>
+              <span>📱 010-9876-5432</span>
+              <span>🏷️ 3조</span>
+            </div>
+          </div>
+          <div class="ml-4">
+            <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 mb-2">
+              답변하기
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 답변 완료 문의 1 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">답변완료</span>
+              <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">일정 문의</span>
+              <span class="text-sm text-gray-500">1일 전</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">박민수 - 중간발표 일정 변경 가능한가요?</h3>
+            <p class="text-gray-600 mb-3">개인 사정으로 7월 3일 중간발표 참석이 어려울 것 같습니다. 일정 조정이 가능한지 문의드립니다.</p>
+            
+            <!-- 답변 내용 -->
+            <div class="bg-gray-50 rounded-lg p-4 mt-4">
+              <div class="flex items-center space-x-2 mb-2">
+                <span class="text-sm font-medium text-emerald-600">권회은 운영진</span>
+                <span class="text-xs text-gray-500">12시간 전 답변</span>
+              </div>
+              <p class="text-sm text-gray-700">안녕하세요 민수님, 중간발표 일정 변경 요청 확인했습니다. 7월 4일 오후로 개별 발표 일정을 조정해드렸습니다. 발표 자료는 기존 일정대로 7월 2일까지 제출해주세요.</p>
+            </div>
+            
+            <div class="flex items-center space-x-4 text-sm text-gray-500 mt-3">
+              <span>📧 minsu@email.com</span>
+              <span>📱 010-5555-1234</span>
+              <span>🏷️ 2조</span>
+            </div>
+          </div>
+          <div class="ml-4">
+            <span class="text-green-600 text-sm font-medium">✓ 해결됨</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 답변 완료 문의 2 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">답변완료</span>
+              <span class="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded">멘토링</span>
+              <span class="text-sm text-gray-500">2일 전</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">정수현 - 추가 멘토링 세션 요청</h3>
+            <p class="text-gray-600 mb-3">머신러닝 알고리즘 구현 부분에서 어려움을 겪고 있어서 추가 멘토링 세션을 요청드립니다.</p>
+            
+            <!-- 답변 내용 -->
+            <div class="bg-gray-50 rounded-lg p-4 mt-4">
+              <div class="flex items-center space-x-2 mb-2">
+                <span class="text-sm font-medium text-emerald-600">권회은 운영진</span>
+                <span class="text-xs text-gray-500">1일 전 답변</span>
+              </div>
+              <p class="text-sm text-gray-700">수현님, 추가 멘토링 요청 확인했습니다. 김민준 멘토님과 7월 1일 오후 2시에 1:1 세션을 배정해드렸습니다. 미리 궁금한 점들을 정리해오시면 더 효율적인 멘토링이 가능할 것 같습니다.</p>
+            </div>
+            
+            <div class="flex items-center space-x-4 text-sm text-gray-500 mt-3">
+              <span>📧 suhyun@email.com</span>
+              <span>📱 010-7777-8888</span>
+              <span>🏷️ 4조</span>
+            </div>
+          </div>
+          <div class="ml-4">
+            <span class="text-green-600 text-sm font-medium">✓ 해결됨</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 페이지네이션 -->
+    <section class="flex justify-center">
+      <nav class="flex items-center space-x-2">
+        <button class="px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100">이전</button>
+        <button class="px-3 py-2 text-sm leading-tight text-white bg-emerald-600 border border-emerald-600">1</button>
+        <button class="px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100">2</button>
+        <button class="px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100">3</button>
+        <button class="px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100">다음</button>
+      </nav>
+    </section>
+  </div>
+
+  <script>
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
+    // 필터 기능
+    document.getElementById('statusFilter').addEventListener('change', function() {
+      const selectedStatus = this.value;
+      // 실제 구현시 문의 목록 필터링 로직 추가
+      console.log('상태 필터:', selectedStatus);
+    });
+
+    document.getElementById('categoryFilter').addEventListener('change', function() {
+      const selectedCategory = this.value;
+      // 실제 구현시 카테고리 필터링 로직 추가
+      console.log('카테고리 필터:', selectedCategory);
+    });
+
+    // 답변하기 버튼 클릭
+    document.querySelectorAll('button').forEach(button => {
+      if (button.textContent.includes('답변하기')) {
+        button.addEventListener('click', function() {
+          // 실제 구현시 답변 작성 모달 또는 페이지 이동
+          alert('답변 작성 페이지로 이동합니다.');
+        });
+      }
+    });
+  </script>
+</body>
+</html> 

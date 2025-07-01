@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>설문 관리 - AI-X 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+  <!-- 네비게이션 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <a href="#" onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
+          <h1 class="text-2xl font-bold text-green-700">🎓 학습자 온보딩 시스템</h1>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto p-6">
+    <!-- 관리자 대시보드 헤더 -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <div class="flex items-start justify-between">
+        <div class="flex items-start">
+          <svg class="w-8 h-8 text-indigo-600 mr-4 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">설문 관리 시스템</h2>
+            <p class="text-gray-600">설문을 활성화하고 응답 현황을 확인할 수 있습니다.</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-sm text-gray-500">총 등록된 설문</div>
+          <div class="text-2xl font-bold text-indigo-600">4개</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 설문 관리 목록 -->
+    <div class="space-y-6">
+      <!-- 설문 1 -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">1</span>
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">팀 빌딩을 위한 사전설문</h3>
+              <p class="text-gray-600 text-sm">최적의 팀 편성을 위한 개인 정보와 기술 수준, 협업 스타일을 파악합니다.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-blue-600" id="count-team-building">27</div>
+              <div class="text-sm text-gray-500">응답자</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="toggle-team-building" class="sr-only peer" checked onchange="toggleSurvey('team-building')">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4 text-sm text-gray-500">
+            <span>⏱️ 예상 소요: 10-15분</span>
+            <span>📅 생성일: 2024-01-15</span>
+            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">활성화</span>
+          </div>
+          <div class="flex space-x-2">
+            <button onclick="editSurvey('team-building')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
+              설문 편집
+            </button>
+            <button onclick="viewResponses('team-building')" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+              응답 보기
+            </button>
+            <button onclick="downloadResults('team-building')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+              다운로드
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 설문 2 -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <span class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">2</span>
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">슬기로운 프로젝트 생활 Part 1</h3>
+              <p class="text-gray-600 text-sm">프로젝트 초기 단계에서의 목표 설정과 계획 수립에 대한 설문입니다.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600" id="count-project-life-1">89</div>
+              <div class="text-sm text-gray-500">응답자</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="toggle-project-life-1" class="sr-only peer" checked onchange="toggleSurvey('project-life-1')">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+            </label>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4 text-sm text-gray-500">
+            <span>⏱️ 예상 소요: 8-12분</span>
+            <span>📅 생성일: 2024-01-20</span>
+            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">활성화</span>
+          </div>
+          <div class="flex space-x-2">
+            <button onclick="editSurvey('project-life-1')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
+              설문 편집
+            </button>
+            <button onclick="viewResponses('project-life-1')" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors">
+              응답 보기
+            </button>
+            <button onclick="downloadResults('project-life-1')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+              다운로드
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 설문 3 -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <span class="bg-purple-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">3</span>
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">슬기로운 프로젝트 생활 Part 2</h3>
+              <p class="text-gray-600 text-sm">프로젝트 진행 중 발생하는 문제 해결과 팀워크에 관한 설문입니다.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-purple-600" id="count-project-life-2">45</div>
+              <div class="text-sm text-gray-500">응답자</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="toggle-project-life-2" class="sr-only peer" onchange="toggleSurvey('project-life-2')">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+            </label>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4 text-sm text-gray-500">
+            <span>⏱️ 예상 소요: 7-10분</span>
+            <span>📅 생성일: 2024-01-25</span>
+            <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">비활성화</span>
+          </div>
+          <div class="flex space-x-2">
+            <button onclick="editSurvey('project-life-2')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
+              설문 편집
+            </button>
+            <button onclick="viewResponses('project-life-2')" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors">
+              응답 보기
+            </button>
+            <button onclick="downloadResults('project-life-2')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+              다운로드
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 설문 4 -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <span class="bg-orange-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">4</span>
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">슬기로운 프로젝트 생활 Part 3</h3>
+              <p class="text-gray-600 text-sm">프로젝트 완료 및 결과 평가, 향후 개선 방안에 대한 설문입니다.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-orange-600" id="count-project-life-3">12</div>
+              <div class="text-sm text-gray-500">응답자</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="toggle-project-life-3" class="sr-only peer" onchange="toggleSurvey('project-life-3')">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+            </label>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4 text-sm text-gray-500">
+            <span>⏱️ 예상 소요: 5-8분</span>
+            <span>📅 생성일: 2024-01-30</span>
+            <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">비활성화</span>
+          </div>
+          <div class="flex space-x-2">
+            <button onclick="editSurvey('project-life-3')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
+              설문 편집
+            </button>
+            <button onclick="viewResponses('project-life-3')" class="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors">
+              응답 보기
+            </button>
+            <button onclick="downloadResults('project-life-3')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+              다운로드
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 설문 추가 버튼 -->
+      <div class="flex justify-center">
+        <button onclick="addSurvey()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+          설문 추가
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // 설문 상태 데이터
+    const surveyData = {
+      'team-building': {
+        title: '팀 빌딩을 위한 사전설문',
+        active: true,
+        responseCount: 127,
+        createdDate: '2024-01-15'
+      },
+      'project-life-1': {
+        title: '슬기로운 프로젝트 생활 Part 1',
+        active: true,
+        responseCount: 89,
+        createdDate: '2024-01-20'
+      },
+      'project-life-2': {
+        title: '슬기로운 프로젝트 생활 Part 2',
+        active: false,
+        responseCount: 45,
+        createdDate: '2024-01-25'
+      },
+      'project-life-3': {
+        title: '슬기로운 프로젝트 생활 Part 3',
+        active: false,
+        responseCount: 12,
+        createdDate: '2024-01-30'
+      }
+    };
+
+    // 설문 활성화/비활성화 토글
+    function toggleSurvey(surveyId) {
+      const toggle = document.getElementById(`toggle-${surveyId}`);
+      const isActive = toggle.checked;
+      
+      surveyData[surveyId].active = isActive;
+      
+      // 상태 업데이트
+      updateSurveyStatus(surveyId);
+      
+      // 로그 출력 (실제 구현에서는 서버로 전송)
+      console.log(`설문 ${surveyId} 상태 변경:`, isActive ? '활성화' : '비활성화');
+      
+      // 알림 메시지
+      const action = isActive ? '활성화' : '비활성화';
+      showNotification(`${surveyData[surveyId].title}가 ${action}되었습니다.`, isActive ? 'success' : 'warning');
+    }
+
+    // 설문 상태 업데이트
+    function updateSurveyStatus(surveyId) {
+      const statusElements = document.querySelectorAll(`[data-survey="${surveyId}"] .status-badge`);
+      const isActive = surveyData[surveyId].active;
+      
+      // 상태 뱃지 찾기 (다른 방법으로 접근)
+      const surveyCard = document.getElementById(`toggle-${surveyId}`).closest('.bg-white');
+      const statusBadge = surveyCard.querySelector('.px-2.py-1');
+      
+      if (statusBadge) {
+        if (isActive) {
+          statusBadge.className = 'px-2 py-1 bg-green-100 text-green-800 rounded-full';
+          statusBadge.textContent = '활성화';
+        } else {
+          statusBadge.className = 'px-2 py-1 bg-red-100 text-red-800 rounded-full';
+          statusBadge.textContent = '비활성화';
+        }
+      }
+    }
+
+    // 응답 보기
+    function viewResponses(surveyId) {
+      const survey = surveyData[surveyId];
+      alert(`📊 ${survey.title} 응답 현황\n\n` +
+            `• 총 응답자: ${survey.responseCount}명\n` +
+            `• 설문 상태: ${survey.active ? '활성화' : '비활성화'}\n` +
+            `• 생성일: ${survey.createdDate}\n\n` +
+            `상세 응답 내용을 보려면 별도 페이지로 이동합니다.`);
+      
+      // 실제 구현에서는 응답 상세 페이지로 이동
+      console.log(`응답 보기: ${surveyId}`);
+    }
+
+    // 결과 다운로드
+    function downloadResults(surveyId) {
+      const survey = surveyData[surveyId];
+      
+      if (survey.responseCount === 0) {
+        showNotification('응답자가 없어서 다운로드할 데이터가 없습니다.', 'warning');
+        return;
+      }
+      
+      // 실제 구현에서는 서버에서 파일 생성 및 다운로드
+      showNotification(`${survey.title} 결과를 다운로드 중입니다...`, 'info');
+      
+      // 시뮬레이션: 2초 후 다운로드 완료
+      setTimeout(() => {
+        showNotification('다운로드가 완료되었습니다!', 'success');
+        console.log(`다운로드 완료: ${surveyId}_results.xlsx`);
+      }, 2000);
+    }
+
+    // 알림 메시지 표시
+    function showNotification(message, type = 'info') {
+      // 기존 알림이 있으면 제거
+      const existingNotification = document.querySelector('.notification');
+      if (existingNotification) {
+        existingNotification.remove();
+      }
+      
+      // 알림 색상 설정
+      let bgColor, textColor;
+      switch (type) {
+        case 'success':
+          bgColor = 'bg-green-100';
+          textColor = 'text-green-800';
+          break;
+        case 'warning':
+          bgColor = 'bg-yellow-100';
+          textColor = 'text-yellow-800';
+          break;
+        case 'error':
+          bgColor = 'bg-red-100';
+          textColor = 'text-red-800';
+          break;
+        default:
+          bgColor = 'bg-blue-100';
+          textColor = 'text-blue-800';
+      }
+      
+      // 알림 요소 생성
+      const notification = document.createElement('div');
+      notification.className = `notification fixed top-4 right-4 ${bgColor} ${textColor} px-6 py-4 rounded-lg shadow-lg z-50 transition-all duration-300`;
+      notification.textContent = message;
+      
+      // 페이지에 추가
+      document.body.appendChild(notification);
+      
+      // 3초 후 자동 제거
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.remove();
+          }
+        }, 300);
+      }, 3000);
+    }
+
+    // 실시간 응답자 수 업데이트 시뮬레이션
+    function simulateResponseUpdates() {
+      setInterval(() => {
+        // 활성화된 설문의 응답자 수를 랜덤하게 증가
+        Object.keys(surveyData).forEach(surveyId => {
+          if (surveyData[surveyId].active && Math.random() < 0.1) { // 10% 확률
+            surveyData[surveyId].responseCount += Math.floor(Math.random() * 3) + 1;
+            const countElement = document.getElementById(`count-${surveyId}`);
+            if (countElement) {
+              countElement.textContent = surveyData[surveyId].responseCount;
+            }
+          }
+        });
+      }, 30000); // 30초마다 업데이트
+    }
+
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
+    function addSurvey() {
+      // 설문 추가 로직을 구현해야 합니다.
+      console.log('설문 추가 로직을 구현해야 합니다.');
+    }
+  </script>
+</body>
+</html>

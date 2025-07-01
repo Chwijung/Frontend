@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-X 3기 상세 관리 - AI-X 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <!-- 네비게이션 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <a href="#" id="backLink" class="text-indigo-600 hover:text-indigo-800">← 기수 전체보기로</a>
+          <h1 class="text-2xl font-bold text-gray-800" id="cohortTitle">📅 AI-X 3기 상세 관리</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">운영자: 권회은</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto p-6 space-y-8">
+    
+    <!-- 기수 상태 정보 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 class="text-3xl font-bold text-blue-800" id="cohortName">AI-X 3기</h2>
+          <div class="flex items-center space-x-4 mt-2">
+            <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">진행중</span>
+            <span class="text-gray-600">📅 2025.06.18 ~ 2025.08.30</span>
+            <span class="text-gray-600">👥 24명 (8개 조)</span>
+          </div>
+          <div class="mt-4">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-gray-600">진행률:</span>
+              <div class="flex-1 bg-gray-200 rounded-full h-2 max-w-xs">
+                <div class="bg-blue-600 h-2 rounded-full" style="width: 45%"></div>
+              </div>
+              <span class="text-sm font-medium text-blue-600">45%</span>
+            </div>
+            <p class="text-sm text-gray-500 mt-1">현재 중간 발표 준비중</p>
+          </div>
+        </div>
+        <div class="flex space-x-2">
+          <button onclick="editCohortInfo()" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
+            ✏️ 정보 수정
+          </button>
+          <button onclick="generateReport()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+            📊 보고서 생성
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 빠른 통계 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold mb-6 flex items-center">
+        <svg class="w-6 h-6 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+        </svg>
+        실시간 통계
+      </h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-lg border border-blue-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-2xl font-bold text-blue-800">24</div>
+              <div class="text-sm text-blue-600">수강생</div>
+            </div>
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg border border-green-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-2xl font-bold text-green-800">18</div>
+              <div class="text-sm text-green-600">과제 제출</div>
+            </div>
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg border border-yellow-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-2xl font-bold text-yellow-800">6</div>
+              <div class="text-sm text-yellow-600">미제출</div>
+            </div>
+            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg border border-purple-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-2xl font-bold text-purple-800">32</div>
+              <div class="text-sm text-purple-600">멘토링 기록</div>
+            </div>
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 주요 일정 및 관리 메뉴 -->
+    <div class="grid md:grid-cols-2 gap-8">
+      <!-- 다음 일정 -->
+      <section class="bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+          <svg class="w-5 h-5 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          다음 일정
+        </h2>
+        <div class="space-y-3">
+          <div class="bg-orange-50 border border-orange-200 p-3 rounded-lg">
+            <div class="flex justify-between items-center">
+              <span class="font-medium text-orange-800">📊 중간 발표</span>
+              <span class="text-sm text-orange-600">07.25 (목)</span>
+            </div>
+            <p class="text-sm text-orange-600 mt-1">멘토링 10회차 - 각 조별 중간 발표</p>
+          </div>
+          <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+            <div class="flex justify-between items-center">
+              <span class="font-medium text-blue-800">💼 현직자 특강</span>
+              <span class="text-sm text-blue-600">07.27 (토)</span>
+            </div>
+            <p class="text-sm text-blue-600 mt-1">중간 발표 주 토요일</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 빠른 관리 메뉴 -->
+      <section class="bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+          <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          빠른 관리
+        </h2>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="window.location.href='student-onboarding.html'" class="bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition-colors">
+            <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+            </svg>
+            <div class="text-sm">수강생 관리</div>
+          </button>
+          <button onclick="window.location.href='team-management.html'" class="bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition-colors">
+            <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <div class="text-sm">조 관리</div>
+          </button>
+          <button onclick="window.location.href='mentoring-log.html'" class="bg-purple-500 text-white p-3 rounded-lg hover:bg-purple-600 transition-colors">
+            <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            <div class="text-sm">멘토링</div>
+          </button>
+          <button onclick="window.location.href='project-system.html'" class="bg-yellow-500 text-white p-3 rounded-lg hover:bg-yellow-600 transition-colors">
+            <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+            <div class="text-sm">프로젝트</div>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- 전체 일정 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold flex items-center">
+          <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          AI-X 3기 전체 일정
+        </h2>
+        <div class="flex space-x-2">
+          <button onclick="modifySchedule()" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
+            ✏️ 일정 수정
+          </button>
+          <button onclick="exportSchedule()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+            📤 일정 내보내기
+          </button>
+        </div>
+      </div>
+      
+      <div id="schedulePreview" class="space-y-4">
+        <!-- Week 1 -->
+        <div class="border border-blue-200 rounded-lg p-4 bg-blue-50">
+          <h3 class="font-bold text-blue-800 mb-2">1주차 (2025.06.18 - 2025.06.24)</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">📝 OT 및 팀 매칭</span>
+                <span class="text-xs text-gray-500">06.18 (수)</span>
+              </div>
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">📚 딥러닝 특강 1일차</span>
+                <span class="text-xs text-gray-500">06.19 (목)</span>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">📚 딥러닝 특강 2일차</span>
+                <span class="text-xs text-gray-500">06.20 (금)</span>
+              </div>
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">ℹ️ 과정 안내</span>
+                <span class="text-xs text-gray-500">06.21 (토)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Week 2 -->
+        <div class="border border-yellow-200 rounded-lg p-4 bg-yellow-50">
+          <h3 class="font-bold text-yellow-800 mb-2">2주차 (2025.06.25 - 2025.07.01)</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">💼 취업 특강 (멘토링 4회차)</span>
+                <span class="text-xs text-gray-500">06.27 (목)</span>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">📊 미니프로젝트 발표 (멘토링 3회차)</span>
+                <span class="text-xs text-gray-500">06.28 (금)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Week 3-4 -->
+        <div class="border border-purple-200 rounded-lg p-4 bg-purple-50">
+          <h3 class="font-bold text-purple-800 mb-2">3-4주차 (2025.07.02 - 2025.07.15)</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">📋 기획 발표 (멘토링 5회차)</span>
+                <span class="text-xs text-gray-500">07.04 (목)</span>
+              </div>
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">🤝 협업 특강</span>
+                <span class="text-xs text-gray-500">07.06 (토)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Week 5-6 (현재 진행중) -->
+        <div class="border-2 border-orange-400 rounded-lg p-4 bg-orange-50">
+          <h3 class="font-bold text-orange-800 mb-2">5-6주차 (2025.07.16 - 2025.07.29) - 현재 진행중</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between p-2 bg-white rounded border border-orange-300">
+                <span class="text-sm">📊 중간 발표 (멘토링 10회차)</span>
+                <span class="text-xs text-orange-600 font-medium">07.25 (목) - 예정</span>
+              </div>
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">💼 현직자 특강</span>
+                <span class="text-xs text-gray-500">07.27 (토)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Week 7-8 -->
+        <div class="border border-red-200 rounded-lg p-4 bg-red-50">
+          <h3 class="font-bold text-red-800 mb-2">7-8주차 (2025.07.30 - 2025.08.12)</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">⚡ 최종 발표 D-2</span>
+                <span class="text-xs text-gray-500">08.10 (토)</span>
+              </div>
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">⚡ 최종 발표 D-1</span>
+                <span class="text-xs text-gray-500">08.11 (일)</span>
+              </div>
+              <div class="flex items-center justify-between p-2 bg-white rounded border">
+                <span class="text-sm">🎉 최종 발표</span>
+                <span class="text-xs text-gray-500">08.12 (월)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // URL 파라미터로 기수 정보 동적 로드
+    function loadCohortInfo() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cohortId = urlParams.get('cohort') || 'ai-x-3rd';
+      
+      const cohortData = {
+        'ai-x-3rd': {
+          name: 'AI-X 3기',
+          status: '진행중',
+          period: '2025.06.18 ~ 2025.08.30',
+          students: '24명 (8개 조)',
+          progress: '45%',
+          currentPhase: '중간 발표 준비중'
+        },
+        'ai-x-2nd': {
+          name: 'AI-X 2기',
+          status: '완료',
+          period: '2025.03.01 ~ 2025.05.20',
+          students: '18명 (6개 조)',
+          progress: '100%',
+          currentPhase: '과정 완료'
+        },
+        'ai-x-1st': {
+          name: 'AI-X 1기',
+          status: '완료',
+          period: '2024.10.01 ~ 2024.12.15',
+          students: '15명 (5개 조)',
+          progress: '100%',
+          currentPhase: '과정 완료'
+        }
+      };
+
+      const cohort = cohortData[cohortId];
+      if (cohort) {
+        document.getElementById('cohortTitle').textContent = `📅 ${cohort.name} 상세 관리`;
+        document.getElementById('cohortName').textContent = cohort.name;
+        document.title = `${cohort.name} 상세 관리 - AI-X 시스템`;
+        
+        // 뒤로가기 링크 설정
+        document.getElementById('backLink').href = `main.html?cohort=${cohortId}`;
+      }
+    }
+
+    function editCohortInfo() {
+      alert('기수 정보 수정 모달을 엽니다.\n\n수정 가능 항목:\n• 기수 이름\n• 교육 기간\n• 수강생 수\n• 멘토링 일정');
+    }
+
+    function generateReport() {
+      alert('📊 기수 보고서를 생성합니다...\n\n포함 내용:\n• 수강생 현황 및 출석률\n• 과제 제출 통계\n• 멘토링 기록 요약\n• 프로젝트 진행 상황\n• 예산 사용 내역');
+    }
+
+    function modifySchedule() {
+      alert('📅 일정 수정 모드로 전환합니다.\n\n수정 가능 항목:\n• 일정 날짜 변경\n• 새 일정 추가\n• 일정 삭제\n• 일정 설명 수정');
+    }
+
+    function exportSchedule() {
+      if (confirm('일정을 어떤 형식으로 내보내시겠습니까?\n\nOK: Excel 파일\nCancel: PDF 파일')) {
+        alert('📊 Excel 형식으로 일정을 내보냅니다.');
+      } else {
+        alert('📄 PDF 형식으로 일정을 내보냅니다.');
+      }
+    }
+
+    // 페이지 로드 시 기수 정보 로드
+    document.addEventListener('DOMContentLoaded', loadCohortInfo);
+  </script>
+</body>
+</html> 

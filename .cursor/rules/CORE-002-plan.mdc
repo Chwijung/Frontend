@@ -1,0 +1,40 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# CORE-002 메인 대시보드 구현 개발 계획
+
+## 목표
+- AI-X 통합 운영 시스템의 메인 대시보드 UI 및 핵심 기능 구현
+- 기존 main.html의 UI/UX와 통일성 유지
+- React + Tailwind CSS 기반 컴포넌트 구조로 전환 및 확장성 확보
+- context7 MCP(예: TailAdmin 등) 대시보드 템플릿/구현 가이드 적극 활용
+
+## 주요 기능 및 화면 요소
+- 기수별 핵심 기능 카드(운영, 팀, 과제 등) 및 네비게이션
+- 실시간 알림 패널(운영진 긴급 알림, 미작성/미제출 등)
+- 진행 현황 차트(Chart.js 활용, 기수별 데이터 시각화)
+- 스마트 포트폴리오, 설문, 멘토링, 상담 등 주요 관리 섹션
+- 반응형 레이아웃 및 Tailwind CSS 유틸리티 활용
+
+## 개발 원칙
+- 기존 main.html의 레이아웃, 컬러, UI 흐름 최대한 유지
+- 컴포넌트 단위 분리(카드, 알림, 차트 등) 및 재사용성 고려
+- context7 MCP 대시보드 템플릿(예: TailAdmin) 구조/패턴 참고
+- TanStack Query 등 상태 관리, Chart.js 등 시각화 라이브러리 활용
+- 스타일은 Tailwind CSS 클래스 우선 적용, 인라인 스타일 지양
+
+## 작업 단계
+1. main.html 구조 분석 및 React 컴포넌트 설계(카드, 알림, 차트 등)
+2. TailAdmin 등 context7 대시보드 템플릿 구조/컴포넌트 벤치마킹
+3. 메인 대시보드 레이아웃 및 핵심 UI 컴포넌트 구현
+4. Chart.js 기반 진행 현황 차트 컴포넌트화
+5. 알림, 포트폴리오, 설문 등 주요 섹션 컴포넌트화
+6. 반응형/접근성 테스트 및 UI/UX 개선
+
+## 참고 자료
+- [@development-task.mdc](mdc:development-task.mdc)
+- [@tech-stack.mdc](mdc:tech-stack.mdc)
+- [@main.html](mdc:html_code/main.html)
+- context7 MCP: [TailAdmin React + Tailwind 대시보드 템플릿](https://github.com/TailAdmin/free-react-tailwind-admin-dashboard)

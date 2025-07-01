@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>멘토링 일지 관리 - AI-X 운영 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      overflow-x: hidden;
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 to-purple-100">
+  <!-- 헤더 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <button onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">
+            ← 메인으로
+          </button>
+          <h1 class="text-2xl font-bold text-indigo-700">📋 멘토링 일지 관리</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">운영진: 권회은</span>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm text-red-600 font-medium">미작성 3개</span>
+            <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto p-6 space-y-6">
+    <!-- 페이지 헤더 -->
+    <header class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">멘토링 일지 관리</h2>
+          <p class="text-gray-600">AI-X 3기 조별 멘토링 진행 상황을 확인하고 관리하세요</p>
+        </div>
+        <div class="text-right">
+          <div class="text-2xl font-bold text-indigo-600">4개조</div>
+          <div class="text-sm text-gray-500">총 관리 조</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 실시간 대시보드 -->
+    <section class="bg-gradient-to-r from-red-500 to-pink-500 rounded-xl shadow-xl p-6 text-white">
+      <h3 class="text-xl font-bold mb-4 flex items-center">
+        ⚠️ 멘토링 일지 미작성 알림
+      </h3>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="bg-white bg-opacity-20 rounded-lg p-4">
+          <p class="font-bold text-lg">2조</p>
+          <p class="text-sm opacity-90">6월 25일 (화) 미작성</p>
+          <p class="text-xs opacity-75">멘토: 김민준</p>
+        </div>
+        <div class="bg-white bg-opacity-20 rounded-lg p-4">
+          <p class="font-bold text-lg">3조</p>
+          <p class="text-sm opacity-90">6월 26일 (수) 미작성</p>
+          <p class="text-xs opacity-75">멘토: 이수정</p>
+        </div>
+        <div class="bg-white bg-opacity-20 rounded-lg p-4">
+          <p class="font-bold text-lg">4조</p>
+          <p class="text-sm opacity-90">6월 27일 (목) 미작성</p>
+          <p class="text-xs opacity-75">멘토: 박성민</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 조별 멘토링 현황 -->
+    <section class="grid md:grid-cols-2 gap-6">
+      <!-- 1조 -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-3">
+            <div class="bg-blue-100 p-2 rounded-lg">
+              <span class="text-blue-600 font-bold">1조</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">김민준 멘토</h3>
+              <p class="text-sm text-gray-600">AI 챗봇 프로젝트</p>
+            </div>
+          </div>
+          <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">완료</span>
+        </div>
+        
+        <div class="space-y-3">
+          <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg border border-green-200">
+            <span class="text-sm font-medium">6월 24일 (월)</span>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-green-600">✓ 작성완료</span>
+              <button class="text-blue-600 hover:text-blue-800 text-xs">보기</button>
+            </div>
+          </div>
+          <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg border border-green-200">
+            <span class="text-sm font-medium">6월 26일 (수)</span>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-green-600">✓ 작성완료</span>
+              <button class="text-blue-600 hover:text-blue-800 text-xs">보기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2조 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-3">
+            <div class="bg-red-100 p-2 rounded-lg">
+              <span class="text-red-600 font-bold">2조</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">김민준 멘토</h3>
+              <p class="text-sm text-gray-600">추천 시스템 프로젝트</p>
+            </div>
+          </div>
+          <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미작성</span>
+        </div>
+        
+        <div class="space-y-3">
+          <div class="flex justify-between items-center p-3 bg-red-50 rounded-lg border border-red-200">
+            <span class="text-sm font-medium">6월 25일 (화)</span>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-red-600">⚠️ 미작성</span>
+              <button class="text-red-600 hover:text-red-800 text-xs">알림</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3조 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-3">
+            <div class="bg-red-100 p-2 rounded-lg">
+              <span class="text-red-600 font-bold">3조</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">이수정 멘토</h3>
+              <p class="text-sm text-gray-600">웹 서비스 프로젝트</p>
+            </div>
+          </div>
+          <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미작성</span>
+        </div>
+        
+        <div class="space-y-3">
+          <div class="flex justify-between items-center p-3 bg-red-50 rounded-lg border border-red-200">
+            <span class="text-sm font-medium">6월 26일 (수)</span>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-red-600">⚠️ 미작성</span>
+              <button class="text-red-600 hover:text-red-800 text-xs">알림</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4조 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-3">
+            <div class="bg-red-100 p-2 rounded-lg">
+              <span class="text-red-600 font-bold">4조</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">박성민 멘토</h3>
+              <p class="text-sm text-gray-600">데이터 분석 프로젝트</p>
+            </div>
+          </div>
+          <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미작성</span>
+        </div>
+        
+        <div class="space-y-3">
+          <div class="flex justify-between items-center p-3 bg-red-50 rounded-lg border border-red-200">
+            <span class="text-sm font-medium">6월 27일 (목)</span>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-red-600">⚠️ 미작성</span>
+              <button class="text-red-600 hover:text-red-800 text-xs">알림</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 주간 멘토링 캘린더 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <h3 class="text-xl font-semibold mb-4 flex items-center">
+        <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        이번 주 멘토링 스케줄
+      </h3>
+      
+      <div class="grid grid-cols-7 gap-2">
+        <!-- 요일 헤더 -->
+        <div class="text-center text-sm font-medium text-gray-600 p-2">월</div>
+        <div class="text-center text-sm font-medium text-gray-600 p-2">화</div>
+        <div class="text-center text-sm font-medium text-gray-600 p-2">수</div>
+        <div class="text-center text-sm font-medium text-gray-600 p-2">목</div>
+        <div class="text-center text-sm font-medium text-gray-600 p-2">금</div>
+        <div class="text-center text-sm font-medium text-gray-600 p-2">토</div>
+        <div class="text-center text-sm font-medium text-gray-600 p-2">일</div>
+        
+        <!-- 날짜 및 일지 상태 -->
+        <div class="text-center p-2 border rounded">
+          <div class="text-sm font-medium">24</div>
+          <div class="flex flex-col space-y-1 mt-1">
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+          </div>
+        </div>
+        
+        <div class="text-center p-2 border rounded">
+          <div class="text-sm font-medium">25</div>
+          <div class="flex flex-col space-y-1 mt-1">
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+            <div class="w-full h-1 bg-red-400 rounded"></div>
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+          </div>
+        </div>
+        
+        <div class="text-center p-2 border rounded">
+          <div class="text-sm font-medium">26</div>
+          <div class="flex flex-col space-y-1 mt-1">
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+            <div class="w-full h-1 bg-red-400 rounded"></div>
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+          </div>
+        </div>
+        
+        <div class="text-center p-2 border rounded">
+          <div class="text-sm font-medium">27</div>
+          <div class="flex flex-col space-y-1 mt-1">
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+            <div class="w-full h-1 bg-green-400 rounded"></div>
+            <div class="w-full h-1 bg-red-400 rounded"></div>
+          </div>
+        </div>
+        
+        <div class="text-center p-2 border rounded bg-gray-50">
+          <div class="text-sm font-medium">28</div>
+          <div class="flex flex-col space-y-1 mt-1">
+            <div class="w-full h-1 bg-gray-300 rounded"></div>
+            <div class="w-full h-1 bg-gray-300 rounded"></div>
+            <div class="w-full h-1 bg-gray-300 rounded"></div>
+            <div class="w-full h-1 bg-gray-300 rounded"></div>
+          </div>
+        </div>
+        
+        <div class="text-center p-2 border rounded bg-gray-50">
+          <div class="text-sm font-medium">29</div>
+          <div class="text-xs text-gray-400 mt-1">휴무</div>
+        </div>
+        
+        <div class="text-center p-2 border rounded bg-gray-50">
+          <div class="text-sm font-medium">30</div>
+          <div class="text-xs text-gray-400 mt-1">휴무</div>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-4 mt-4 text-sm">
+        <div class="flex items-center space-x-2">
+          <div class="w-3 h-1 bg-green-400 rounded"></div>
+          <span>작성완료</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-3 h-1 bg-red-400 rounded"></div>
+          <span>미작성</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-3 h-1 bg-gray-300 rounded"></div>
+          <span>예정</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
+    // 일지 보기 버튼들
+    document.querySelectorAll('button').forEach(button => {
+      if (button.textContent === '보기') {
+        button.addEventListener('click', function() {
+          alert('멘토링 일지 상세 내용을 확인합니다.');
+        });
+      }
+      if (button.textContent === '알림') {
+        button.addEventListener('click', function() {
+          alert('해당 멘토에게 작성 알림을 발송했습니다.');
+        });
+      }
+    });
+  </script>
+</body>
+</html> 

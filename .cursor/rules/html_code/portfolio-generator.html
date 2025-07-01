@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚀 스마트 포트폴리오 자동 생성기 - AI-X 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    html, body {
+      overflow-x: hidden;
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+    .upload-zone {
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .upload-zone.drag-over {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+    }
+
+  </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-pink-100">
+  <!-- 헤더 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <button onclick="goBackToMain()" class="text-purple-600 hover:text-purple-700">
+            ← 메인으로
+          </button>
+          <h1 class="text-2xl font-bold text-purple-700">🚀 스마트 포트폴리오 생성기</h1>
+          <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            ✨ 마법의 순간
+          </span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">AI-X 3기</span>
+          <div class="flex space-x-2">
+            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+            <span class="text-sm text-green-600">자동 수집 활성</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto p-6 space-y-8">
+    <!-- 메인 헤더 -->
+    <header class="text-center py-6">
+      <h2 class="text-4xl font-bold text-gray-800 mb-4">
+        🎯 학생 산출물을 <span class="text-purple-600">자동으로</span> 포트폴리오로!
+      </h2>
+      <p class="text-xl text-gray-600">프로젝트 관리에서 자동 수집하여 취업용 포트폴리오 생성</p>
+    </header>
+
+    <!-- 학생별 포트폴리오 현황 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-semibold">📊 AI-X 3기 포트폴리오 현황</h3>
+        <div class="flex space-x-2">
+          <button onclick="generateAllPortfolios()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+            전체 포트폴리오 생성
+          </button>
+          <select id="teamFilter" onchange="filterByTeam()" class="border border-gray-300 rounded-lg px-3 py-2">
+            <option value="">전체 조</option>
+            <option value="1">1조 - AI Innovators</option>
+            <option value="2">2조 - Data Wizards</option>
+            <option value="3">3조 - Vision Masters</option>
+            <option value="4">4조 - Deep Learners</option>
+            <option value="5">5조 - ML Pioneers</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 통계 요약 -->
+      <div class="grid md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+          <div class="text-2xl font-bold text-green-600" id="completedCount">12</div>
+          <div class="text-sm text-green-700">완료 (55%)</div>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+          <div class="text-2xl font-bold text-yellow-600" id="inProgressCount">7</div>
+          <div class="text-sm text-yellow-700">진행중 (32%)</div>
+        </div>
+        <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+          <div class="text-2xl font-bold text-red-600" id="notStartedCount">3</div>
+          <div class="text-sm text-red-700">시작 전 (13%)</div>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <div class="text-2xl font-bold text-blue-600">22</div>
+          <div class="text-sm text-blue-700">전체 학생</div>
+        </div>
+      </div>
+
+      <div id="studentGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+
+  </div>
+
+  <script>
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
+    // 전체 학생 데이터
+    const allStudents = [
+      // 1조 - AI Innovators
+      { name: '김하늘', team: 1, teamName: 'AI Innovators', role: '리더', status: 'completed', progress: 100, files: 47, initial: '김', bgColor: 'bg-blue-500' },
+      { name: '박민서', team: 1, teamName: 'AI Innovators', role: '멤버', status: 'completed', progress: 100, files: 39, initial: '박', bgColor: 'bg-blue-400' },
+      { name: '송지우', team: 1, teamName: 'AI Innovators', role: '멤버', status: 'in-progress', progress: 85, files: 32, initial: '송', bgColor: 'bg-blue-400' },
+      { name: '최예린', team: 1, teamName: 'AI Innovators', role: '멤버', status: 'in-progress', progress: 78, files: 28, initial: '최', bgColor: 'bg-blue-400' },
+      
+      // 2조 - Data Wizards
+      { name: '이현서', team: 2, teamName: 'Data Wizards', role: '리더', status: 'completed', progress: 100, files: 45, initial: '이', bgColor: 'bg-green-500' },
+      { name: '최창재', team: 2, teamName: 'Data Wizards', role: '멤버', status: 'completed', progress: 100, files: 41, initial: '최', bgColor: 'bg-green-400' },
+      { name: '배경관', team: 2, teamName: 'Data Wizards', role: '멤버', status: 'in-progress', progress: 75, files: 32, initial: '배', bgColor: 'bg-green-400' },
+      { name: '한소영', team: 2, teamName: 'Data Wizards', role: '멤버', status: 'completed', progress: 100, files: 38, initial: '한', bgColor: 'bg-green-400' },
+      { name: '김민수', team: 2, teamName: 'Data Wizards', role: '멤버', status: 'in-progress', progress: 68, files: 25, initial: '김', bgColor: 'bg-green-400' },
+      
+      // 3조 - Vision Masters
+      { name: '강민준', team: 3, teamName: 'Vision Masters', role: '리더', status: 'completed', progress: 100, files: 43, initial: '강', bgColor: 'bg-purple-500' },
+      { name: '윤서진', team: 3, teamName: 'Vision Masters', role: '멤버', status: 'completed', progress: 100, files: 36, initial: '윤', bgColor: 'bg-purple-400' },
+      { name: '정다은', team: 3, teamName: 'Vision Masters', role: '멤버', status: 'completed', progress: 100, files: 40, initial: '정', bgColor: 'bg-purple-400' },
+      { name: '이지원', team: 3, teamName: 'Vision Masters', role: '멤버', status: 'in-progress', progress: 82, files: 30, initial: '이', bgColor: 'bg-purple-400' },
+      
+      // 4조 - Deep Learners
+      { name: '오태현', team: 4, teamName: 'Deep Learners', role: '리더', status: 'completed', progress: 100, files: 46, initial: '오', bgColor: 'bg-red-500' },
+      { name: '임수진', team: 4, teamName: 'Deep Learners', role: '멤버', status: 'completed', progress: 100, files: 42, initial: '임', bgColor: 'bg-red-400' },
+      { name: '장현우', team: 4, teamName: 'Deep Learners', role: '멤버', status: 'in-progress', progress: 72, files: 29, initial: '장', bgColor: 'bg-red-400' },
+      { name: '조민지', team: 4, teamName: 'Deep Learners', role: '멤버', status: 'completed', progress: 100, files: 37, initial: '조', bgColor: 'bg-red-400' },
+      { name: '황준서', team: 4, teamName: 'Deep Learners', role: '멤버', status: 'not-started', progress: 15, files: 8, initial: '황', bgColor: 'bg-red-400' },
+      
+      // 5조 - ML Pioneers
+      { name: '김도윤', team: 5, teamName: 'ML Pioneers', role: '리더', status: 'completed', progress: 100, files: 44, initial: '김', bgColor: 'bg-yellow-500' },
+      { name: '박서연', team: 5, teamName: 'ML Pioneers', role: '멤버', status: 'in-progress', progress: 88, files: 35, initial: '박', bgColor: 'bg-yellow-400' },
+      { name: '신재민', team: 5, teamName: 'ML Pioneers', role: '멤버', status: 'not-started', progress: 25, files: 12, initial: '신', bgColor: 'bg-yellow-400' },
+      { name: '이하은', team: 5, teamName: 'ML Pioneers', role: '멤버', status: 'not-started', progress: 20, files: 9, initial: '이', bgColor: 'bg-yellow-400' }
+    ];
+
+    const portfolioData = {
+      '김하늘': { projects: ['AI 챗봇 개발', '자연어 처리 프로젝트', '추천 시스템'], skills: ['Python', 'TensorFlow', 'OpenAI API'], github: 'https://github.com/kimhaneul-ai', portfolio: 'https://kimhaneul-portfolio.netlify.app' },
+      '박민서': { projects: ['반응형 웹사이트', 'E-commerce 개발', 'React 포트폴리오'], skills: ['React', 'Node.js', 'MongoDB'], github: 'https://github.com/parkminseo-web', portfolio: 'https://parkminseo-portfolio.netlify.app' },
+      '송지우': { projects: ['모바일 앱 개발', 'IoT 프로젝트'], skills: ['Flutter', 'Arduino', 'Firebase'], github: 'https://github.com/songjiwoo-mobile', portfolio: 'https://songjiwoo-portfolio.netlify.app' },
+      '최예린': { projects: ['UI/UX 디자인 시스템', '프론트엔드 컴포넌트'], skills: ['Figma', 'React', 'Tailwind CSS'], github: 'https://github.com/choiyerin-design', portfolio: 'https://choiyerin-portfolio.netlify.app' },
+      '이현서': { projects: ['데이터 시각화 대시보드', '고객 분석 프로젝트'], skills: ['Python', 'Pandas', 'Tableau'], github: 'https://github.com/leehyunseo-data', portfolio: 'https://leehyunseo-portfolio.netlify.app' },
+      '최창재': { projects: ['빅데이터 분석 플랫폼', '머신러닝 파이프라인'], skills: ['Spark', 'Kafka', 'MLflow'], github: 'https://github.com/choichangjae-bigdata', portfolio: 'https://choichangjae-portfolio.netlify.app' },
+      '배경관': { projects: ['실시간 데이터 처리', '예측 모델링'], skills: ['Python', 'TensorFlow', 'Docker'], github: 'https://github.com/baekyeonggwan-ml', portfolio: 'https://baekyeonggwan-portfolio.netlify.app' },
+      '한소영': { projects: ['데이터 마이닝', '통계 분석 도구'], skills: ['R', 'Python', 'SQL'], github: 'https://github.com/hansoyoung-stats', portfolio: 'https://hansoyoung-portfolio.netlify.app' },
+      '김민수': { projects: ['클라우드 데이터 파이프라인', 'ETL 자동화'], skills: ['AWS', 'Airflow', 'Python'], github: 'https://github.com/kimminsoo-cloud', portfolio: 'https://kimminsoo-portfolio.netlify.app' },
+      '강민준': { projects: ['컴퓨터 비전 프로젝트', '객체 인식 시스템'], skills: ['OpenCV', 'PyTorch', 'YOLO'], github: 'https://github.com/kangminjun-vision', portfolio: 'https://kangminjun-portfolio.netlify.app' },
+      '윤서진': { projects: ['이미지 분류 모델', '의료 영상 분석'], skills: ['TensorFlow', 'Keras', 'DICOM'], github: 'https://github.com/yoonseojin-medical', portfolio: 'https://yoonseojin-portfolio.netlify.app' },
+      '정다은': { projects: ['AR/VR 애플리케이션', '3D 모델링'], skills: ['Unity', 'Blender', 'C#'], github: 'https://github.com/jeongdaeun-ar', portfolio: 'https://jeongdaeun-portfolio.netlify.app' },
+      '이지원': { projects: ['얼굴 인식 시스템', '감정 분석'], skills: ['dlib', 'OpenCV', 'scikit-learn'], github: 'https://github.com/leejiwon-face', portfolio: 'https://leejiwon-portfolio.netlify.app' },
+      '오태현': { projects: ['딥러닝 모델 최적화', 'GPU 가속화'], skills: ['CUDA', 'TensorRT', 'PyTorch'], github: 'https://github.com/otaehyeon-deep', portfolio: 'https://otaehyeon-portfolio.netlify.app' },
+      '임수진': { projects: ['강화학습 게임 AI', '자율주행 시뮬레이션'], skills: ['RL', 'OpenAI Gym', 'ROS'], github: 'https://github.com/imsujin-rl', portfolio: 'https://imsujin-portfolio.netlify.app' },
+      '장현우': { projects: ['신경망 아키텍처 연구', 'AutoML'], skills: ['PyTorch', 'Optuna', 'Hyperopt'], github: 'https://github.com/janghyeonwoo-automl', portfolio: 'https://janghyeonwoo-portfolio.netlify.app' },
+      '조민지': { projects: ['텍스트 생성 모델', '챗봇 개발'], skills: ['Transformers', 'BERT', 'GPT'], github: 'https://github.com/jominji-nlp', portfolio: 'https://jominji-portfolio.netlify.app' },
+      '황준서': { projects: ['시계열 예측', '이상 탐지'], skills: ['LSTM', 'Prophet', 'Isolation Forest'], github: 'https://github.com/hwangjunseo-ts', portfolio: 'https://hwangjunseo-portfolio.netlify.app' },
+      '김도윤': { projects: ['ML 파이프라인 구축', '모델 배포 시스템'], skills: ['MLOps', 'Kubernetes', 'FastAPI'], github: 'https://github.com/kimdoyoon-mlops', portfolio: 'https://kimdoyoon-portfolio.netlify.app' },
+      '박서연': { projects: ['추천 시스템', '개인화 알고리즘'], skills: ['Collaborative Filtering', 'LightFM', 'Redis'], github: 'https://github.com/parkseoyeon-recsys', portfolio: 'https://parkseoyeon-portfolio.netlify.app' },
+      '신재민': { projects: ['클러스터링 분석', '차원 축소'], skills: ['scikit-learn', 'UMAP', 't-SNE'], github: 'https://github.com/shinjaemin-cluster', portfolio: 'https://shinjaemin-portfolio.netlify.app' },
+      '이하은': { projects: ['앙상블 학습', '교차 검증'], skills: ['XGBoost', 'Random Forest', 'Stratified KFold'], github: 'https://github.com/leehaeun-ensemble', portfolio: 'https://leehaeun-portfolio.netlify.app' }
+    };
+
+    function renderStudents(students = allStudents) {
+      const grid = document.getElementById('studentGrid');
+      grid.innerHTML = '';
+      
+      students.forEach(student => {
+        const statusClass = {
+          'completed': 'bg-green-100 text-green-800',
+          'in-progress': 'bg-yellow-100 text-yellow-800',
+          'not-started': 'bg-red-100 text-red-800'
+        }[student.status];
+        
+        const statusText = {
+          'completed': '완료',
+          'in-progress': '진행중',
+          'not-started': '시작 전'
+        }[student.status];
+        
+        const progressColor = {
+          'completed': 'bg-green-600',
+          'in-progress': 'bg-yellow-500',
+          'not-started': 'bg-red-500'
+        }[student.status];
+
+        const card = document.createElement('div');
+        card.className = 'border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow';
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-3">
+              <div class="w-12 h-12 ${student.bgColor} rounded-full flex items-center justify-center text-white font-bold">${student.initial}</div>
+              <div>
+                <h4 class="font-semibold">${student.name}</h4>
+                <p class="text-sm text-gray-600">${student.team}조 - ${student.teamName} | ${student.role}</p>
+              </div>
+            </div>
+            <span class="${statusClass} px-2 py-1 rounded-full text-sm">${statusText}</span>
+          </div>
+          
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span>작성한 데일리 스크럼</span>
+              <span class="font-semibold">${student.files}개</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>포트폴리오 진행률</span>
+              <span class="font-semibold">${student.progress}%</span>
+            </div>
+          </div>
+
+          <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+            <div class="${progressColor} h-2 rounded-full" style="width: ${student.progress}%"></div>
+          </div>
+
+          <button onclick="viewPortfolio('${student.name}')" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+            포트폴리오 보기
+          </button>
+        `;
+        grid.appendChild(card);
+      });
+      
+      updateStatistics(students);
+    }
+
+    function updateStatistics(students = allStudents) {
+      const completed = students.filter(s => s.status === 'completed').length;
+      const inProgress = students.filter(s => s.status === 'in-progress').length;
+      const notStarted = students.filter(s => s.status === 'not-started').length;
+      
+      document.getElementById('completedCount').textContent = completed;
+      document.getElementById('inProgressCount').textContent = inProgress;
+      document.getElementById('notStartedCount').textContent = notStarted;
+    }
+
+    function filterByTeam() {
+      const teamFilter = document.getElementById('teamFilter').value;
+      if (teamFilter === '') {
+        renderStudents(allStudents);
+      } else {
+        const filteredStudents = allStudents.filter(student => student.team == teamFilter);
+        renderStudents(filteredStudents);
+      }
+    }
+
+    function viewPortfolio(studentName) {
+      const student = portfolioData[studentName];
+      if (student) {
+        alert(`🎉 ${studentName} 학생의 포트폴리오가 자동 생성되었습니다!\n\n📁 프로젝트: ${student.projects.join(', ')}\n💻 기술스택: ${student.skills.join(', ')}\n🌐 포트폴리오: ${student.portfolio}\n📊 GitHub: ${student.github}\n\n✅ 취업 준비 완료!`);
+      }
+    }
+
+    function generateAllPortfolios() {
+      const button = event.target;
+      button.disabled = true;
+      button.innerHTML = '⚡ 생성중...';
+      
+      setTimeout(() => {
+        button.disabled = false;
+        button.innerHTML = '전체 포트폴리오 생성';
+        alert('🚀 전체 학생 포트폴리오가 자동 생성되었습니다!\n\n✅ 22명 모든 학생의 포트폴리오 완성\n📊 포트폴리오 완성률: 55% → 100%\n⏰ 강사 관리시간: 주당 25시간 절약\n🎯 학생 만족도: 7.1 → 9.2점\n📈 취업 성공률: 35% 향상 예상');
+      }, 3000);
+    }
+
+    // 페이지 로드 시 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+      renderStudents();
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🤝 스마트 멘토링 추적 시스템 - AI-X</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gradient-to-br from-teal-50 to-cyan-100">
+  <!-- 헤더 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <button onclick="goBackToMain()" class="text-teal-600 hover:text-teal-700">
+            ← 메인으로
+          </button>
+          <h1 class="text-2xl font-bold text-teal-700">🤝 스마트 멘토링 추적</h1>
+          <span class="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            AI 자동 분석
+          </span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">AI-X 3기</span>
+          <button onclick="startMentoring()" class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700">
+            멘토링 시작
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto p-6 space-y-8">
+    <!-- 메인 헤더 -->
+    <header class="text-center py-6">
+      <h2 class="text-4xl font-bold text-gray-800 mb-4">
+        🎯 멘토링을 <span class="text-teal-600">자동으로</span> 추적하고 기록!
+      </h2>
+      <p class="text-xl text-gray-600">AI가 멘토링 패턴을 분석하여 자동으로 일지 생성 및 학습자 현황 추적</p>
+    </header>
+
+    <!-- 실시간 멘토링 현황 -->
+    <section class="grid md:grid-cols-4 gap-6">
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-600">일지 작성률</p>
+            <p class="text-3xl font-bold text-green-600">100%</p>
+            <p class="text-xs text-green-600">↑ 자동 생성으로</p>
+          </div>
+          <div class="bg-green-100 p-3 rounded-lg">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-600">이번 주 멘토링</p>
+            <p class="text-3xl font-bold text-blue-600">28회</p>
+            <p class="text-xs text-blue-600">자동 기록</p>
+          </div>
+          <div class="bg-blue-100 p-3 rounded-lg">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-600">위험 학습자</p>
+            <p class="text-3xl font-bold text-orange-600">2명</p>
+            <p class="text-xs text-orange-600">AI 자동 감지</p>
+          </div>
+          <div class="bg-orange-100 p-3 rounded-lg">
+            <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.314 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-600">멘토 효율성</p>
+            <p class="text-3xl font-bold text-purple-600">94%</p>
+            <p class="text-xs text-purple-600">데이터 기반</p>
+          </div>
+          <div class="bg-purple-100 p-3 rounded-lg">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI 자동 감지 알림 -->
+    <section class="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl shadow-xl p-6 text-white">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-2xl font-bold mb-2">🚨 AI 자동 위험 감지</h3>
+          <p class="opacity-90">학습 패턴 분석으로 도움이 필요한 학습자를 사전에 발견합니다</p>
+        </div>
+        <button onclick="viewRiskStudents()" class="bg-white text-orange-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">
+          위험 학습자 보기
+        </button>
+      </div>
+    </section>
+
+    <!-- 실시간 멘토링 모니터링 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-semibold">📊 실시간 멘토링 현황</h3>
+        <div class="flex space-x-2">
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            <span class="text-sm text-green-600">실시간 모니터링</span>
+          </div>
+          <button onclick="exportReport()" class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700">
+            보고서 내보내기
+          </button>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 학습자 1 -->
+        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-3">
+              <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">김</div>
+              <div>
+                <h4 class="font-semibold">김하늘</h4>
+                <p class="text-sm text-gray-600">1조 | 정상</p>
+              </div>
+            </div>
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">우수</span>
+          </div>
+          
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span>멘토링 횟수</span>
+              <span class="font-semibold">8회</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>학습 진도</span>
+              <span class="font-semibold text-green-600">95%</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>마지막 멘토링</span>
+              <span class="font-semibold">오늘</span>
+            </div>
+          </div>
+
+          <div class="bg-gray-100 p-3 rounded-lg mb-4">
+            <p class="text-sm text-gray-700">🤖 AI 분석: 학습 속도가 빠르고 적극적인 참여 보임. 심화 과제 추천</p>
+          </div>
+
+          <button onclick="viewStudentDetail('김하늘')" class="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700">
+            상세 분석 보기
+          </button>
+        </div>
+
+        <!-- 학습자 2 (위험군) -->
+        <div class="border border-orange-200 rounded-lg p-4 hover:shadow-md transition-shadow bg-orange-50">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-3">
+              <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">이</div>
+              <div>
+                <h4 class="font-semibold">이지윤</h4>
+                <p class="text-sm text-gray-600">2조 | 주의 필요</p>
+              </div>
+            </div>
+            <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-sm">위험</span>
+          </div>
+          
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span>멘토링 횟수</span>
+              <span class="font-semibold">3회</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>학습 진도</span>
+              <span class="font-semibold text-orange-600">65%</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>마지막 멘토링</span>
+              <span class="font-semibold text-red-600">3일 전</span>
+            </div>
+          </div>
+
+          <div class="bg-orange-100 p-3 rounded-lg mb-4">
+            <p class="text-sm text-orange-700">🚨 AI 경고: 학습 진도 지연, 출석률 저조. 즉시 상담 필요</p>
+          </div>
+
+          <div class="flex space-x-2">
+            <button onclick="urgentMentoring('이지윤')" class="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700 text-sm">
+              긴급 상담
+            </button>
+            <button onclick="viewStudentDetail('이지윤')" class="flex-1 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 text-sm">
+              분석 보기
+            </button>
+          </div>
+        </div>
+
+        <!-- 학습자 3 -->
+        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-3">
+              <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">박</div>
+              <div>
+                <h4 class="font-semibold">박민서</h4>
+                <p class="text-sm text-gray-600">1조 | 정상</p>
+              </div>
+            </div>
+            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">보통</span>
+          </div>
+          
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span>멘토링 횟수</span>
+              <span class="font-semibold">6회</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>학습 진도</span>
+              <span class="font-semibold text-blue-600">82%</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>마지막 멘토링</span>
+              <span class="font-semibold">어제</span>
+            </div>
+          </div>
+
+          <div class="bg-gray-100 p-3 rounded-lg mb-4">
+            <p class="text-sm text-gray-700">🤖 AI 분석: 꾸준한 학습 패턴. 프론트엔드 프로젝트에 집중 권장</p>
+          </div>
+
+          <button onclick="viewStudentDetail('박민서')" class="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700">
+            상세 분석 보기
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI 멘토링 인사이트 -->
+    <section class="grid md:grid-cols-2 gap-8">
+      <!-- 멘토링 트렌드 분석 -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h3 class="text-xl font-semibold mb-4">📈 멘토링 트렌드 분석</h3>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+            <div>
+              <p class="font-semibold">가장 많은 상담 주제</p>
+              <p class="text-sm text-gray-600">알고리즘 문제 해결</p>
+            </div>
+            <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">32%</span>
+          </div>
+          
+          <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+            <div>
+              <p class="font-semibold">평균 멘토링 시간</p>
+              <p class="text-sm text-gray-600">25분 (적정 수준)</p>
+            </div>
+            <span class="bg-green-600 text-white px-3 py-1 rounded-full text-sm">✓</span>
+          </div>
+          
+          <div class="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
+            <div>
+              <p class="font-semibold">멘토링 후 진도 향상</p>
+              <p class="text-sm text-gray-600">평균 15% 상승</p>
+            </div>
+            <span class="bg-yellow-600 text-white px-3 py-1 rounded-full text-sm">↑15%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 자동 일지 생성 현황 -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h3 class="text-xl font-semibold mb-4">🤖 자동 일지 생성 현황</h3>
+        <div class="space-y-4">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-semibold">김하늘 - 알고리즘 상담</h4>
+              <span class="text-xs text-gray-500">10분 전</span>
+            </div>
+            <p class="text-sm text-gray-600 bg-gray-50 p-2 rounded">
+              코딩 테스트 문제 해결 과정에서 시간 복잡도 개념 보완 필요. 다음 주까지 백준 브론즈 문제 10개 추천. 전반적으로 학습 의욕 높음.
+            </p>
+            <div class="mt-2 flex space-x-2">
+              <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">AI 생성</span>
+              <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">검토 완료</span>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-semibold">박민서 - 프로젝트 상담</h4>
+              <span class="text-xs text-gray-500">1시간 전</span>
+            </div>
+            <p class="text-sm text-gray-600 bg-gray-50 p-2 rounded">
+              React 프로젝트에서 상태 관리에 어려움 겪음. Redux 기본 개념 설명 후 실습 진행. 다음 세션에서 실제 프로젝트 적용 예정.
+            </p>
+            <div class="mt-2 flex space-x-2">
+              <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">AI 생성</span>
+              <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">검토 완료</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    function startMentoring() {
+      alert('🤝 멘토링이 시작되었습니다!\n\n• AI가 자동으로 대화 내용을 분석합니다\n• 멘토링 종료 시 자동으로 일지가 생성됩니다\n• 학습자 진도가 실시간으로 업데이트됩니다');
+    }
+
+    function viewRiskStudents() {
+      alert('🚨 위험 학습자 2명 발견\n\n1. 이지윤 학습자\n   - 학습 진도: 65% (평균 대비 낮음)\n   - 출석률: 80%\n   - 마지막 멘토링: 3일 전\n   - 권장 조치: 즉시 1:1 상담\n\n2. 최창재 학습자\n   - 과제 제출률: 60%\n   - 질문 빈도: 낮음\n   - 권장 조치: 학습 동기 부여 상담');
+    }
+
+    function viewStudentDetail(studentName) {
+      const studentData = {
+        '김하늘': {
+          trend: '상승',
+          strength: 'Python, 알고리즘',
+          weakness: '없음',
+          recommendation: '심화 과제 도전'
+        },
+        '이지윤': {
+          trend: '하락',
+          strength: 'HTML/CSS',
+          weakness: 'JavaScript, 알고리즘',
+          recommendation: '기초 보강 필수'
+        },
+        '박민서': {
+          trend: '안정',
+          strength: 'React, 프론트엔드',
+          weakness: '백엔드 개발',
+          recommendation: 'Full-stack 학습'
+        }
+      };
+
+      const data = studentData[studentName];
+      if (data) {
+        alert(`📊 ${studentName} 학습자 상세 분석\n\n📈 학습 트렌드: ${data.trend}\n💪 강점: ${data.strength}\n🎯 보완점: ${data.weakness}\n📝 권장사항: ${data.recommendation}\n\n🤖 AI가 학습 패턴을 분석하여 맞춤형 추천을 제공합니다.`);
+      }
+    }
+
+    function urgentMentoring(studentName) {
+      alert(`🚨 ${studentName} 학습자 긴급 상담 요청\n\n📞 멘토에게 즉시 알림이 전송되었습니다.\n⏰ 24시간 이내 상담 예약이 필요합니다.\n📝 AI가 상담 가이드를 자동 생성했습니다.\n\n상담 후 자동으로 진도 관리 계획이 수립됩니다.`);
+    }
+
+    function exportReport() {
+      alert('📊 멘토링 종합 보고서 생성 중...\n\n포함 내용:\n• 전체 학습자 진도 현황\n• 멘토링 효과 분석\n• 위험 학습자 리스트\n• AI 추천 개선 방안\n• 주간/월간 트렌드 분석\n\n📥 Excel 파일로 다운로드됩니다.');
+    }
+
+    // 실시간 위험 학습자 감지 시뮬레이션
+    function simulateRiskDetection() {
+      const notifications = [
+        '🚨 최창재 학습자 - 3일 연속 과제 미제출 감지',
+        '⚠️ 한소영 학습자 - 학습 진도 20% 하락',
+        '🔍 윤서진 학습자 - 질문 빈도 급감',
+        '📊 송지우 학습자 - 출석률 70% 아래로 떨어짐'
+      ];
+      
+      const notification = notifications[Math.floor(Math.random() * notifications.length)];
+      
+      const alertDiv = document.createElement('div');
+      alertDiv.className = 'fixed top-4 right-4 bg-orange-500 text-white p-4 rounded-lg shadow-lg z-50 max-w-sm';
+      alertDiv.innerHTML = `
+        <div class="flex items-start space-x-2">
+          <span class="text-lg">🚨</span>
+          <div>
+            <p class="font-semibold">AI 위험 감지</p>
+            <p class="text-sm">${notification}</p>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(alertDiv);
+      
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 5000);
+    }
+
+    // 10초마다 위험 감지 시뮬레이션
+    setInterval(simulateRiskDetection, 12000);
+
+    // 페이지 로드 시 환영 메시지
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        const welcomeMessage = `
+🤝 스마트 멘토링 추적 시스템에 오신 것을 환영합니다!
+
+✨ 핵심 기능:
+• AI 기반 학습자 위험 감지
+• 자동 멘토링 일지 생성
+• 실시간 학습 진도 추적
+• 맞춤형 상담 가이드 제공
+
+🚨 해결하는 문제:
+• 멘토링 일지 미작성으로 인한 현황 파악 어려움
+• 위험 학습자 조기 발견의 어려움
+• 멘토링 효과 측정의 주관성
+
+🎉 현재 성과:
+• 일지 작성률: 100% (자동 생성)
+• 위험 학습자 조기 발견: 평균 3일 단축
+• 멘토링 효율성: 94% 향상
+        `;
+        console.log(welcomeMessage);
+      }, 1000);
+    });
+
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
+    // 모달 관리
+    function openModal(modalId) {
+    }
+  </script>
+</body>
+</html> 

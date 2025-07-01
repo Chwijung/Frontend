@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-X 전체 기수 관리</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script>
+    // 페이지 로드 시 인증 상태 확인 및 스크롤 초기화
+    window.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isAuthenticated = urlParams.get('authenticated') === 'true';
+      
+      if (isAuthenticated) {
+        // main.html에서 온 경우 로그인 건너뛰기
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainContent').classList.remove('hidden');
+        document.getElementById('mainContent').classList.add('block');
+      }
+      
+      // 스크롤 버튼 상태 초기화
+      setTimeout(() => {
+        updateScrollButtons();
+        
+        // 스크롤 이벤트 리스너 추가
+        const container = document.getElementById('cohortCardContainer');
+        if (container) {
+          container.addEventListener('scroll', updateScrollButtons);
+        }
+      }, 100);
+    });
+
+    function goToCohort(id) {
+      window.location.href = `main.html?cohort=${id}`;
+    }
+
+    // 기수 목록 스크롤 기능
+    function scrollCohortList(direction) {
+      const container = document.getElementById('cohortCardContainer');
+      const scrollAmount = 320; // 카드 폭 + 간격
+      
+      if (direction === 'left') {
+        container.scrollLeft -= scrollAmount;
+      } else {
+        container.scrollLeft += scrollAmount;
+      }
+      
+      // 스크롤 버튼 표시/숨김 업데이트
+      updateScrollButtons();
+    }
+
+    // 스크롤 버튼 표시/숨김 업데이트
+    function updateScrollButtons() {
+      const container = document.getElementById('cohortCardContainer');
+      const leftButton = document.getElementById('scrollLeft');
+      const rightButton = document.getElementById('scrollRight');
+      
+      if (!container || !leftButton || !rightButton) return;
+      
+      // 좌측 버튼: 스크롤이 맨 왼쪽에 있으면 흐리게
+      if (container.scrollLeft <= 0) {
+        leftButton.style.opacity = '0.3';
+        leftButton.style.pointerEvents = 'none';
+      } else {
+        leftButton.style.opacity = '1';
+        leftButton.style.pointerEvents = 'auto';
+      }
+      
+      // 우측 버튼: 스크롤이 맨 오른쪽에 있으면 흐리게
+      if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
+        rightButton.style.opacity = '0.3';
+        rightButton.style.pointerEvents = 'none';
+      } else {
+        rightButton.style.opacity = '1';
+        rightButton.style.pointerEvents = 'auto';
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 p-6" style="overflow-x: hidden;">
+  
+  <!-- 로그인 화면 -->
+  <div id="loginScreen" class="min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-lg p-8 w-96 max-w-sm mx-4">
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold mb-2">🔐 AI-X 시스템</h1>
+        <p class="text-gray-600">운영자 로그인이 필요합니다</p>
+      </div>
+      <form onsubmit="handleLogin(event)">
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-2">아이디</label>
+          <input type="text" id="adminId" class="w-full border p-3 rounded-lg" placeholder="운영자 아이디" required>
+        </div>
+        <div class="mb-6">
+          <label class="block text-sm font-medium mb-2">비밀번호</label>
+          <input type="password" id="adminPassword" class="w-full border p-3 rounded-lg" placeholder="비밀번호" required>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
+          로그인
+        </button>
+      </form>
+      <div class="mt-4 text-center text-sm text-gray-500">
+        <p>테스트 계정: admin / admin123</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 메인 콘텐츠 (로그인 후 표시) -->
+  <div id="mainContent" class="max-w-5xl mx-auto space-y-8 hidden">
+
+    <!-- 헤더 -->
+    <header class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold mb-2">📁 AI-X 전체 기수 관리</h1>
+        <p class="text-gray-600">운영자 권회은 님, 총 3개 기수를 관리 중입니다.</p>
+      </div>
+      <div>
+        <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">
+          🚪 로그아웃
+        </button>
+      </div>
+    </header>
+
+    <!-- 전체 기수 목록 -->
+    <section class="bg-white shadow rounded-xl p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">🗂 기수 목록</h2>
+        <select class="border p-2 rounded w-full md:w-1/3 ml-4" onchange="goToCohort(this.value)">
+          <option selected disabled>기수를 선택하세요</option>
+          <option value="ai-x-3rd">AI-X 3기 (진행 중)</option>
+          <option value="ai-x-2nd">AI-X 2기 (종료)</option>
+          <option value="ai-x-1st">AI-X 1기 (종료)</option>
+          <option value="ai-x-4th">AI-X 4기 (기획 중)</option>
+        </select>
+      </div>
+      
+      <!-- 스와이프 가능한 기수 카드 컨테이너 -->
+      <div class="relative">
+        <!-- 좌측 스크롤 버튼 -->
+        <button id="scrollLeft" onclick="scrollCohortList('left')" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        
+        <!-- 우측 스크롤 버튼 -->
+        <button id="scrollRight" onclick="scrollCohortList('right')" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+        
+        <!-- 스크롤 가능한 기수 카드 리스트 -->
+        <div id="cohortCardContainer" class="flex gap-4 overflow-x-auto scroll-smooth mx-8" style="scrollbar-width: none; -ms-overflow-style: none;">
+          <style>
+            #cohortCardContainer::-webkit-scrollbar {
+              display: none;
+            }
+          </style>
+          
+          <div class="flex-shrink-0 w-80 border rounded-lg p-4 bg-blue-50 text-sm">
+            <h3 class="font-bold">AI-X 3기</h3>
+            <p>운영 기간: 2025.06.18 ~ 2025.08.30</p>
+            <p>상태: <span class="text-blue-700 font-semibold">진행 중</span></p>
+            <button onclick="goToCohort('ai-x-3rd')" class="mt-2 text-blue-600 underline">접속하기</button>
+          </div>
+          
+          <div class="flex-shrink-0 w-80 border rounded-lg p-4 text-sm">
+            <h3 class="font-bold">AI-X 2기</h3>
+            <p>운영 기간: 2025.03.01 ~ 2025.05.20</p>
+            <p>상태: 종료</p>
+            <button onclick="goToCohort('ai-x-2nd')" class="mt-2 text-blue-600 underline">아카이브 보기</button>
+          </div>
+          
+          <div class="flex-shrink-0 w-80 border rounded-lg p-4 text-sm">
+            <h3 class="font-bold">AI-X 1기</h3>
+            <p>운영 기간: 2024.10.01 ~ 2024.12.15</p>
+            <p>상태: 종료</p>
+            <button onclick="goToCohort('ai-x-1st')" class="mt-2 text-blue-600 underline">아카이브 보기</button>
+          </div>
+          
+          <div class="flex-shrink-0 w-80 border rounded-lg p-4 text-sm bg-green-50">
+            <h3 class="font-bold">AI-X 4기</h3>
+            <p>운영 기간: 2025.09.01 ~ 2025.11.15</p>
+            <p>상태: <span class="text-green-700 font-semibold">기획 중</span></p>
+            <button onclick="goToCohort('ai-x-4th')" class="mt-2 text-green-600 underline">기획 보기</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 신규 기수 생성 -->
+    <section class="bg-white shadow rounded-xl p-4">
+      <h2 class="text-lg font-semibold mb-3">➕ 새 기수 생성</h2>
+      <form class="space-y-4" onsubmit="createNewCohort(event)">
+        <!-- 기본 정보 -->
+        <div class="grid md:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-medium mb-1">기수 이름</label>
+            <input type="text" id="cohortName" placeholder="예: AI-X 4기" class="w-full border p-2 rounded text-sm" required>
+          </div>
+          <div>
+            <label class="block text-xs font-medium mb-1">시작일</label>
+            <input type="date" id="startDate" class="w-full border p-2 rounded text-sm" required>
+          </div>
+          <div>
+            <label class="block text-xs font-medium mb-1">종료일</label>
+            <input type="date" id="endDate" class="w-full border p-2 rounded text-sm" required>
+          </div>
+        </div>
+
+        <!-- 주요 일정 -->
+        <div class="border-t pt-4">
+          <h3 class="text-base font-semibold mb-3">📅 주요 일정</h3>
+          <div class="grid md:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-medium mb-1">OT (오리엔테이션)</label>
+              <input type="date" id="orientationDate" class="w-full border p-2 rounded text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">딥러닝 특강 1일차</label>
+              <input type="date" id="deepLearning1Date" class="w-full border p-2 rounded text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">딥러닝 특강 2일차</label>
+              <input type="date" id="deepLearning2Date" class="w-full border p-2 rounded text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">취업 특강</label>
+              <input type="date" id="careerLectureDate" class="w-full border p-2 rounded text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">미니프로젝트 발표</label>
+              <input type="date" id="miniProjectDate" class="w-full border p-2 rounded text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">기획 발표</label>
+              <input type="date" id="planningPresentationDate" class="w-full border p-2 rounded text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">협업 특강</label>
+              <input type="date" id="collaborationLectureDate" class="w-full border p-2 rounded text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">중간 발표</label>
+              <input type="date" id="midPresentationDate" class="w-full border p-2 rounded text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">현직자 특강</label>
+              <input type="date" id="industryLectureDate" class="w-full border p-2 rounded text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">최종발표</label>
+              <input type="date" id="finalPresentationDate" class="w-full border p-2 rounded text-sm">
+            </div>
+          </div>
+        </div>
+
+        <!-- 추가 설정 -->
+        <div class="border-t pt-4">
+          <h3 class="text-base font-semibold mb-3">⚙️ 기수 설정</h3>
+          <div class="grid md:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-medium mb-1">예상 수강생 수</label>
+              <input type="number" id="expectedStudents" placeholder="20" class="w-full border p-2 rounded text-sm" min="1" max="100">
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">운영 방식</label>
+              <select id="operationMode" class="w-full border p-2 rounded text-sm">
+                <option value="hybrid">하이브리드</option>
+                <option value="online">온라인</option>
+                <option value="offline">오프라인</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium mb-1">기수 상태</label>
+              <select id="cohortStatus" class="w-full border p-2 rounded text-sm">
+                <option value="planning">기획 중</option>
+                <option value="recruiting">모집 중</option>
+                <option value="ready">시작 대기</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-semibold text-sm">
+          📝 기수 생성하기
+        </button>
+      </form>
+    </section>
+
+  </div>
+
+  <script>
+    function createNewCohort(event) {
+      event.preventDefault();
+      
+      // 기본 정보
+      const cohortName = document.getElementById('cohortName').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      
+      // 주요 일정
+      const orientationDate = document.getElementById('orientationDate').value;
+      const deepLearning1Date = document.getElementById('deepLearning1Date').value;
+      const deepLearning2Date = document.getElementById('deepLearning2Date').value;
+      const careerLectureDate = document.getElementById('careerLectureDate').value;
+      const miniProjectDate = document.getElementById('miniProjectDate').value;
+      const planningPresentationDate = document.getElementById('planningPresentationDate').value;
+      const collaborationLectureDate = document.getElementById('collaborationLectureDate').value;
+      const midPresentationDate = document.getElementById('midPresentationDate').value;
+      const industryLectureDate = document.getElementById('industryLectureDate').value;
+      const finalPresentationDate = document.getElementById('finalPresentationDate').value;
+      
+      // 추가 설정
+      const expectedStudents = document.getElementById('expectedStudents').value;
+      const operationMode = document.getElementById('operationMode').value;
+      const cohortStatus = document.getElementById('cohortStatus').value;
+      
+      // 주요 일정 요약 생성
+      const scheduleItems = [];
+      if (orientationDate) scheduleItems.push(`OT: ${orientationDate}`);
+      if (deepLearning1Date) scheduleItems.push(`딥러닝 특강 1일차: ${deepLearning1Date}`);
+      if (deepLearning2Date) scheduleItems.push(`딥러닝 특강 2일차: ${deepLearning2Date}`);
+      if (careerLectureDate) scheduleItems.push(`취업 특강: ${careerLectureDate}`);
+      if (miniProjectDate) scheduleItems.push(`미니프로젝트 발표: ${miniProjectDate}`);
+      if (planningPresentationDate) scheduleItems.push(`기획 발표: ${planningPresentationDate}`);
+      if (collaborationLectureDate) scheduleItems.push(`협업 특강: ${collaborationLectureDate}`);
+      if (midPresentationDate) scheduleItems.push(`중간 발표: ${midPresentationDate}`);
+      if (industryLectureDate) scheduleItems.push(`현직자 특강: ${industryLectureDate}`);
+      if (finalPresentationDate) scheduleItems.push(`최종발표: ${finalPresentationDate}`);
+      
+      const scheduleText = scheduleItems.length > 0 ? `\n\n주요 일정:\n${scheduleItems.join('\n')}` : '';
+      
+      const operationModeText = {
+        'hybrid': '하이브리드',
+        'online': '온라인', 
+        'offline': '오프라인'
+      }[operationMode];
+      
+      const statusText = {
+        'planning': '기획 중',
+        'recruiting': '모집 중',
+        'ready': '시작 대기'
+      }[cohortStatus];
+      
+      const confirmMessage = `${cohortName}을(를) 생성하시겠습니까?
+      
+기간: ${startDate} ~ ${endDate}
+예상 수강생: ${expectedStudents || '미정'}명
+운영 방식: ${operationModeText}
+상태: ${statusText}${scheduleText}`;
+      
+      if (confirm(confirmMessage)) {
+        // 실제 시스템에서는 서버로 데이터 전송
+        const cohortData = {
+          name: cohortName,
+          startDate,
+          endDate,
+          schedule: {
+            orientation: orientationDate,
+            deepLearning1: deepLearning1Date,
+            deepLearning2: deepLearning2Date,
+            careerLecture: careerLectureDate,
+            miniProject: miniProjectDate,
+            planningPresentation: planningPresentationDate,
+            collaborationLecture: collaborationLectureDate,
+            midPresentation: midPresentationDate,
+            industryLecture: industryLectureDate,
+            finalPresentation: finalPresentationDate
+          },
+          settings: {
+            expectedStudents: expectedStudents || null,
+            operationMode,
+            status: cohortStatus
+          }
+        };
+        
+        console.log('새 기수 데이터:', cohortData);
+        alert(`${cohortName}이(가) 성공적으로 생성되었습니다!\n해당 기수 페이지로 이동합니다.`);
+        
+        // 새로 생성된 기수의 ID 생성 (예시)
+        const cohortId = cohortName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        window.location.href = `main.html?cohort=${cohortId}`;
+      }
+    }
+
+    // 로그인 처리
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      const adminId = document.getElementById('adminId').value;
+      const adminPassword = document.getElementById('adminPassword').value;
+      
+      // 간단한 로그인 검증 (실제 프로젝트에서는 서버에서 처리)
+      if (adminId === 'admin' && adminPassword === 'admin123') {
+        // 로그인 화면 숨기고 메인 콘텐츠 표시
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainContent').classList.remove('hidden');
+        document.getElementById('mainContent').classList.add('block');
+      } else {
+        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+      }
+    }
+
+    // 로그아웃
+    function logout() {
+      if (confirm('로그아웃하시겠습니까?')) {
+        // 메인 콘텐츠 숨기고 로그인 화면 표시
+        document.getElementById('mainContent').classList.add('hidden');
+        document.getElementById('mainContent').classList.remove('block');
+        document.getElementById('loginScreen').style.display = 'flex';
+        
+        // 입력 필드 초기화
+        document.getElementById('adminId').value = '';
+        document.getElementById('adminPassword').value = '';
+      }
+    }
+  </script>
+</body>
+</html> 

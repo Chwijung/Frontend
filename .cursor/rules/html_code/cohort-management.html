@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기수 관리 - AI-X 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <!-- 네비게이션 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <a href="#" onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
+          <h1 class="text-2xl font-bold text-indigo-700">📚 기수 관리</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">운영자: 권회은</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto p-6 space-y-8">
+    
+    <!-- 새 기수 생성 버튼 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-2xl font-bold flex items-center">
+            <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            기수 관리
+          </h2>
+          <p class="text-gray-600 mt-2">AI-X 과정의 모든 기수를 관리하고 새로운 기수를 생성할 수 있습니다.</p>
+        </div>
+        <button onclick="window.location.href='cohort-create.html'" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          새 기수 생성
+        </button>
+      </div>
+    </section>
+
+    <!-- 현재 활성 기수 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold mb-6 flex items-center">
+        <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+        현재 활성 기수
+      </h2>
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 cursor-pointer hover:bg-blue-100 transition-colors" onclick="window.location.href='main.html?cohort=ai-x-3rd'">
+        <div class="flex justify-between items-start">
+          <div>
+            <h3 class="text-xl font-bold text-blue-800">AI-X 3기</h3>
+            <p class="text-blue-600 mt-1">교육 기간: 2025.06.18 ~ 2025.08.30</p>
+            <p class="text-blue-600">수강생: 24명 (8개 조)</p>
+            <p class="text-blue-600">진행률: 45% (중간 발표 준비중)</p>
+          </div>
+          <div class="flex space-x-2">
+            <button onclick="event.stopPropagation(); window.location.href='main.html?cohort=ai-x-3rd'" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+              전체 보기
+            </button>
+          </div>
+        </div>
+        
+        <!-- 빠른 통계 -->
+        <div class="grid md:grid-cols-4 gap-4 mt-6">
+          <div class="bg-white p-4 rounded-lg border border-blue-200">
+            <div class="text-2xl font-bold text-blue-800">24</div>
+            <div class="text-sm text-blue-600">수강생</div>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-blue-200">
+            <div class="text-2xl font-bold text-green-800">18</div>
+            <div class="text-sm text-green-600">과제 제출</div>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-blue-200">
+            <div class="text-2xl font-bold text-yellow-800">6</div>
+            <div class="text-sm text-yellow-600">미제출</div>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-blue-200">
+            <div class="text-2xl font-bold text-purple-800">32</div>
+            <div class="text-sm text-purple-600">멘토링 기록</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 전체 기수 목록 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold mb-6 flex items-center">
+        <svg class="w-6 h-6 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+        </svg>
+        전체 기수 목록
+      </h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        
+        <!-- AI-X 3기 (현재) -->
+        <div class="border border-blue-300 rounded-lg p-6 bg-blue-50 cursor-pointer hover:shadow-lg transition-shadow" onclick="window.location.href='main.html?cohort=ai-x-3rd'">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-blue-800">AI-X 3기</h3>
+            <span class="bg-blue-600 text-white px-2 py-1 rounded-full text-xs">진행중</span>
+          </div>
+          <div class="space-y-2 text-sm text-blue-700">
+            <p>📅 2025.06.18 ~ 2025.08.30</p>
+            <p>👥 24명 (8개 조)</p>
+            <p>📊 진행률: 45%</p>
+          </div>
+          <div class="mt-4 flex space-x-2">
+            <button onclick="event.stopPropagation(); window.location.href='main.html?cohort=ai-x-3rd'" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+              전체보기
+            </button>
+            <button onclick="event.stopPropagation(); generateReport('ai-x-3rd')" class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
+              보고서
+            </button>
+          </div>
+        </div>
+
+        <!-- AI-X 2기 (종료) -->
+        <div class="border border-gray-300 rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow" onclick="window.location.href='main.html?cohort=ai-x-2nd'">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-gray-800">AI-X 2기</h3>
+            <span class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs">완료</span>
+          </div>
+          <div class="space-y-2 text-sm text-gray-600">
+            <p>📅 2025.03.01 ~ 2025.05.20</p>
+            <p>👥 18명 (6개 조)</p>
+            <p>📊 완료율: 100%</p>
+          </div>
+          <div class="mt-4 flex space-x-2">
+            <button onclick="event.stopPropagation(); window.location.href='main.html?cohort=ai-x-2nd'" class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
+              아카이브
+            </button>
+            <button onclick="event.stopPropagation(); copyStructure('ai-x-2nd')" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700">
+              구조 복사
+            </button>
+          </div>
+        </div>
+
+        <!-- AI-X 1기 (종료) -->
+        <div class="border border-gray-300 rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow" onclick="window.location.href='main.html?cohort=ai-x-1st'">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-gray-800">AI-X 1기</h3>
+            <span class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs">완료</span>
+          </div>
+          <div class="space-y-2 text-sm text-gray-600">
+            <p>📅 2024.10.01 ~ 2024.12.15</p>
+            <p>👥 15명 (5개 조)</p>
+            <p>📊 완료율: 100%</p>
+          </div>
+          <div class="mt-4 flex space-x-2">
+            <button onclick="event.stopPropagation(); window.location.href='main.html?cohort=ai-x-1st'" class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
+              아카이브
+            </button>
+            <button onclick="event.stopPropagation(); copyStructure('ai-x-1st')" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700">
+              구조 복사
+            </button>
+          </div>
+        </div>
+
+        <!-- 새 기수 생성 카드 -->
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-green-500 hover:bg-green-50 transition-colors" onclick="window.location.href='cohort-create.html'">
+          <div class="flex flex-col items-center justify-center h-full text-center">
+            <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">새 기수 생성</h3>
+            <p class="text-sm text-gray-500">새로운 AI-X 기수를<br>생성하고 관리하세요</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 통계 요약 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold mb-6 flex items-center">
+        <svg class="w-6 h-6 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+        </svg>
+        전체 통계
+      </h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-lg text-white">
+          <div class="text-3xl font-bold">3</div>
+          <div class="text-blue-100">총 기수</div>
+        </div>
+        <div class="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-lg text-white">
+          <div class="text-3xl font-bold">57</div>
+          <div class="text-green-100">총 수료생</div>
+        </div>
+        <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-lg text-white">
+          <div class="text-3xl font-bold">24</div>
+          <div class="text-purple-100">현재 진행</div>
+        </div>
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 p-6 rounded-lg text-white">
+          <div class="text-3xl font-bold">95%</div>
+          <div class="text-yellow-100">평균 완주율</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    function generateReport(cohortId) {
+      alert(`📊 ${cohortId} 보고서를 생성합니다...\n\n포함 내용:\n• 수강생 현황\n• 과제 제출 통계\n• 멘토링 기록\n• 진행 상황\n• 예산 사용 내역`);
+    }
+
+    function copyStructure(cohortId) {
+      if (confirm(`${cohortId}의 구조를 새 기수에 복사하시겠습니까?\n\n복사될 내용:\n• 교육 일정 구조\n• 과제 템플릿\n• 평가 기준\n• 멘토링 양식`)) {
+        alert('구조가 복사되었습니다! 새 기수 생성 시 자동으로 적용됩니다.');
+      }
+    }
+
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
+    function goToCohortDetail(cohortId) {
+      window.location.href = `main.html?cohort=${cohortId}`;
+    }
+  </script>
+</body>
+</html> 

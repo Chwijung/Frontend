@@ -1,0 +1,54 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.App-header h1 {
+  margin: 0 0 20px 0;
+  color: #61dafb;
+}
+
+.tech-stack {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.tech-stack ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.tech-stack li {
+  margin: 8px 0;
+  padding: 8px;
+  background-color: rgba(97, 218, 251, 0.1);
+  border-radius: 4px;
+}
+
+@media (prefers-color-scheme: light) {
+  .App-header {
+    background-color: #f8f9fa;
+    color: #282c34;
+  }
+  
+  .App-header h1 {
+    color: #0969da;
+  }
+  
+  .tech-stack {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .tech-stack li {
+    background-color: rgba(9, 105, 218, 0.1);
+  }
+} 

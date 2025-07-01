@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>팀 관리 - AI-X 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <!-- 네비게이션 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <a href="#" onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
+          <h1 class="text-2xl font-bold text-indigo-700">👥 팀 관리 시스템</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">운영자: 권회은</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto p-6 space-y-8">
+    
+    <!-- 자동 조 편성 시스템 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold mb-6 flex items-center">
+        <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        자동 조 편성 시스템
+      </h2>
+      <form id="teamFormationForm" class="grid md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">조 편성 방식</label>
+          <select id="formationMethod" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="balanced">균형 편성 (전공/성비 고려)</option>
+            <option value="skill">실력 균등 분배</option>
+            <option value="preference">선호도 기반</option>
+            <option value="random">완전 랜덤</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">조당 인원 수</label>
+          <select id="teamSize" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="4">4명</option>
+            <option value="5" selected>5명</option>
+            <option value="6">6명</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-2">편성 고려사항</label>
+          <div class="grid md:grid-cols-4 gap-4">
+            <label class="flex items-center">
+              <input type="checkbox" id="considerGender" checked class="mr-2">
+              <span class="text-sm">성비 균등</span>
+            </label>
+            <label class="flex items-center">
+              <input type="checkbox" id="considerMajor" checked class="mr-2">
+              <span class="text-sm">전공 분산</span>
+            </label>
+            <label class="flex items-center">
+              <input type="checkbox" id="considerExperience" checked class="mr-2">
+              <span class="text-sm">경험 수준</span>
+            </label>
+            <label class="flex items-center">
+              <input type="checkbox" id="considerPersonality" class="mr-2">
+              <span class="text-sm">성격 유형</span>
+            </label>
+          </div>
+        </div>
+        <div class="md:col-span-2 space-y-4">
+          <div class="flex space-x-4">
+            <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+              자동 조 편성 실행
+            </button>
+            <button type="button" onclick="manualTeamFormation()" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+              수동 편성 모드
+            </button>
+          </div>
+          
+          <!-- 설문 데이터 상태 -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-semibold text-blue-800">설문 데이터 현황</h4>
+                <p class="text-sm text-blue-700">
+                  <span id="surveyStatus">25명 완료 / 28명 전체 (89.3%)</span>
+                  <span class="mx-2">•</span>
+                  <span>마지막 업데이트: 2024.01.11 14:30</span>
+                </p>
+              </div>
+              <div class="flex space-x-2">
+                <button onclick="loadSurveyData()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                  설문 데이터 불러오기
+                </button>
+                <button onclick="openSurveyManager()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm">
+                  설문 관리
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- 현재 조 편성 현황 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold mb-6 flex items-center">
+        <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        </svg>
+        AI-X 3기 조 편성 현황
+      </h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Team 1 -->
+        <div class="border border-blue-200 rounded-lg p-4 bg-blue-50">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center">
+              <input type="text" value="1조 - AI Innovators" class="font-bold text-blue-800 bg-transparent border-b border-blue-300 focus:outline-none focus:border-blue-600">
+            </div>
+            <span class="bg-blue-600 text-white px-2 py-1 rounded-full text-xs">4명</span>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex items-center justify-between cursor-pointer hover:bg-blue-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>김하늘 👑</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-blue-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>박민서</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-blue-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>송지우</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-blue-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>최예린</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-gray-600">
+            <p>담당 멘토: <input type="text" value="정기수" class="bg-transparent border-b border-gray-300 focus:outline-none focus:border-blue-600 text-gray-800 font-medium" style="width: 60px;" onchange="updateMentor(1, this.value)"></p>
+          </div>
+          <div class="mt-3 flex space-x-2">
+            <button onclick="manageTeam(1)" class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700">
+              관리
+            </button>
+            <button onclick="viewProgress(1)" class="bg-gray-600 text-white px-3 py-1 rounded text-xs hover:bg-gray-700">
+              진행률
+            </button>
+          </div>
+        </div>
+
+        <!-- Team 2 -->
+        <div class="border border-green-200 rounded-lg p-4 bg-green-50">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center">
+              <input type="text" value="2조 - Data Wizards" class="font-bold text-green-800 bg-transparent border-b border-green-300 focus:outline-none focus:border-green-600">
+            </div>
+            <span class="bg-green-600 text-white px-2 py-1 rounded-full text-xs">5명</span>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex items-center justify-between cursor-pointer hover:bg-green-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>이현서 👑</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-green-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>최창재</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-green-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>배경관</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-green-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>한소영</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-green-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>김민수</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-gray-600">
+            <p>담당 멘토: <input type="text" value="김영희" class="bg-transparent border-b border-gray-300 focus:outline-none focus:border-green-600 text-gray-800 font-medium" style="width: 60px;" onchange="updateMentor(2, this.value)"></p>
+          </div>
+          <div class="mt-3 flex space-x-2">
+            <button onclick="manageTeam(2)" class="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700">
+              관리
+            </button>
+            <button onclick="viewProgress(2)" class="bg-gray-600 text-white px-3 py-1 rounded text-xs hover:bg-gray-700">
+              진행률
+            </button>
+          </div>
+        </div>
+
+        <!-- Team 3 -->
+        <div class="border border-purple-200 rounded-lg p-4 bg-purple-50">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center">
+              <input type="text" value="3조 - Vision Masters" class="font-bold text-purple-800 bg-transparent border-b border-purple-300 focus:outline-none focus:border-purple-600">
+            </div>
+            <span class="bg-purple-600 text-white px-2 py-1 rounded-full text-xs">4명</span>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex items-center justify-between cursor-pointer hover:bg-purple-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>강민준 👑</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-purple-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>윤서진</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-purple-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>정다은</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-purple-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>이지원</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-gray-600">
+            <p>담당 멘토: <input type="text" value="박철수" class="bg-transparent border-b border-gray-300 focus:outline-none focus:border-purple-600 text-gray-800 font-medium" style="width: 60px;" onchange="updateMentor(3, this.value)"></p>
+          </div>
+          <div class="mt-3 flex space-x-2">
+            <button onclick="manageTeam(3)" class="bg-purple-600 text-white px-3 py-1 rounded text-xs hover:bg-purple-700">
+              관리
+            </button>
+            <button onclick="viewProgress(3)" class="bg-gray-600 text-white px-3 py-1 rounded text-xs hover:bg-gray-700">
+              진행률
+            </button>
+          </div>
+        </div>
+
+        <!-- Team 4 -->
+        <div class="border border-red-200 rounded-lg p-4 bg-red-50">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center">
+              <input type="text" value="4조 - Deep Learners" class="font-bold text-red-800 bg-transparent border-b border-red-300 focus:outline-none focus:border-red-600">
+            </div>
+            <span class="bg-red-600 text-white px-2 py-1 rounded-full text-xs">5명</span>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex items-center justify-between cursor-pointer hover:bg-red-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>오태현 👑</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-red-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>임수진</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-red-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>장현우</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-red-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>조민지</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-red-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>황준서</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-gray-600">
+            <p>담당 멘토: <input type="text" value="이민호" class="bg-transparent border-b border-gray-300 focus:outline-none focus:border-red-600 text-gray-800 font-medium" style="width: 60px;" onchange="updateMentor(4, this.value)"></p>
+          </div>
+          <div class="mt-3 flex space-x-2">
+            <button onclick="manageTeam(4)" class="bg-red-600 text-white px-3 py-1 rounded text-xs hover:bg-red-700">
+              관리
+            </button>
+            <button onclick="viewProgress(4)" class="bg-gray-600 text-white px-3 py-1 rounded text-xs hover:bg-gray-700">
+              진행률
+            </button>
+          </div>
+        </div>
+
+        <!-- Team 5 -->
+        <div class="border border-yellow-200 rounded-lg p-4 bg-yellow-50">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center">
+              <input type="text" value="5조 - ML Pioneers" class="font-bold text-yellow-800 bg-transparent border-b border-yellow-300 focus:outline-none focus:border-yellow-600">
+            </div>
+            <span class="bg-yellow-600 text-white px-2 py-1 rounded-full text-xs">4명</span>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex items-center justify-between cursor-pointer hover:bg-yellow-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>김도윤 👑</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-yellow-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>박서연</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-yellow-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>신재민</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+            <div class="flex items-center justify-between cursor-pointer hover:bg-yellow-100 p-1 rounded" onclick="setTeamLeader(this)">
+              <span>이하은</span>
+              <button class="text-red-500 hover:text-red-700">✕</button>
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-gray-600">
+            <p>담당 멘토: <input type="text" value="최지영" class="bg-transparent border-b border-gray-300 focus:outline-none focus:border-yellow-600 text-gray-800 font-medium" style="width: 60px;" onchange="updateMentor(5, this.value)"></p>
+          </div>
+          <div class="mt-3 flex space-x-2">
+            <button onclick="manageTeam(5)" class="bg-yellow-600 text-white px-3 py-1 rounded text-xs hover:bg-yellow-700">
+              관리
+            </button>
+            <button onclick="viewProgress(5)" class="bg-gray-600 text-white px-3 py-1 rounded text-xs hover:bg-gray-700">
+              진행률
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 수강생 관리 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold flex items-center">
+          <svg class="w-6 h-6 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+          </svg>
+          수강생 관리
+        </h2>
+        <button onclick="openModal('newStudentModal')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">수강생 추가</button>
+      </div>
+      
+      <!-- 검색 및 필터 -->
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <input type="text" id="studentSearch" placeholder="이름으로 검색..." class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <select id="teamFilter" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="">전체 조</option>
+          <option value="1">1조</option>
+          <option value="2">2조</option>
+          <option value="3">3조</option>
+          <option value="4">4조</option>
+          <option value="5">5조</option>
+        </select>
+        <button onclick="exportStudentList()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+          명단 내보내기
+        </button>
+      </div>
+      
+      <!-- 수강생 목록 -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이름</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">조</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">역할</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">삭제</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">김</div>
+                  <div class="ml-3">김하늘</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">1조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">👑 리더</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('김하늘')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-medium">이</div>
+                  <div class="ml-3">이현서</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">2조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">👑 리더</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('이현서')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm font-medium">강</div>
+                  <div class="ml-3">강민준</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">3조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">👑 리더</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('강민준')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white text-sm font-medium">오</div>
+                  <div class="ml-3">오태현</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">4조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">👑 리더</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('오태현')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white text-sm font-medium">김</div>
+                  <div class="ml-3">김도윤</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">5조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">👑 리더</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('김도윤')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center text-white text-sm font-medium">박</div>
+                  <div class="ml-3">박민서</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">1조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('박민서')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center text-white text-sm font-medium">송</div>
+                  <div class="ml-3">송지우</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">1조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('송지우')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center text-white text-sm font-medium">최</div>
+                  <div class="ml-3">최예린</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">1조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('최예린')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center text-white text-sm font-medium">최</div>
+                  <div class="ml-3">최창재</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">2조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('최창재')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center text-white text-sm font-medium">배</div>
+                  <div class="ml-3">배경관</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">2조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('배경관')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center text-white text-sm font-medium">한</div>
+                  <div class="ml-3">한소영</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">2조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('한소영')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center text-white text-sm font-medium">김</div>
+                  <div class="ml-3">김민수</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">2조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('김민수')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-purple-400 rounded-full flex items-center justify-center text-white text-sm font-medium">윤</div>
+                  <div class="ml-3">윤서진</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">3조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('윤서진')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-purple-400 rounded-full flex items-center justify-center text-white text-sm font-medium">정</div>
+                  <div class="ml-3">정다은</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">3조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('정다은')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-purple-400 rounded-full flex items-center justify-center text-white text-sm font-medium">이</div>
+                  <div class="ml-3">이지원</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">3조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('이지원')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-red-400 rounded-full flex items-center justify-center text-white text-sm font-medium">임</div>
+                  <div class="ml-3">임수진</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">4조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('임수진')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-red-400 rounded-full flex items-center justify-center text-white text-sm font-medium">장</div>
+                  <div class="ml-3">장현우</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">4조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('장현우')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-red-400 rounded-full flex items-center justify-center text-white text-sm font-medium">조</div>
+                  <div class="ml-3">조민지</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">4조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('조민지')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-red-400 rounded-full flex items-center justify-center text-white text-sm font-medium">황</div>
+                  <div class="ml-3">황준서</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">4조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('황준서')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-white text-sm font-medium">박</div>
+                  <div class="ml-3">박서연</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">5조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('박서연')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-white text-sm font-medium">신</div>
+                  <div class="ml-3">신재민</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">5조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('신재민')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-white text-sm font-medium">이</div>
+                  <div class="ml-3">이하은</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">5조</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">멤버</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button onclick="removeStudent('이하은')" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+  </div>
+
+  <script>
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
+    function manualTeamFormation() {
+      alert('수동 편성 모드로 전환합니다.\n\n기능:\n• 드래그 앤 드롭으로 조 이동\n• 개별 멘토 배정\n• 팀명 직접 설정\n• 특별 요청 사항 반영');
+    }
+
+    function manageTeam(teamNumber) {
+      alert(`${teamNumber}조 관리 메뉴:\n\n• 팀원 추가/제거\n• 리더 변경\n• 멘토 재배정\n• 프로젝트 주제 변경\n• 팀 채팅 관리\n• 진행 상황 모니터링`);
+    }
+
+    function viewProgress(teamNumber) {
+      alert(`${teamNumber}조 진행 현황:\n\n• 과제 제출률: 85%\n• 멘토링 참여도: 92%\n• 팀 활동 점수: 88%\n• 개별 기여도 분석\n• 주간 진행 리포트`);
+    }
+
+    function addNewTeam() {
+      alert('새 조를 추가합니다.\n\n설정 사항:\n• 조명 설정\n• 초기 멤버 배정\n• 멘토 배정\n• 프로젝트 주제 선정');
+    }
+
+    function viewStudentDetail(studentName) {
+      alert(`${studentName} 상세 정보:\n\n• 개인 프로필\n• 과제 제출 이력\n• 멘토링 기록\n• 팀 내 기여도\n• 출석 현황\n• 특이사항`);
+    }
+
+    function sendMessage(studentName) {
+      alert(`${studentName}에게 메시지를 보냅니다.\n\n발송 방법:\n• 시스템 내 메시지\n• 이메일 알림\n• 긴급 메시지 (SMS)`);
+    }
+
+    function exportStudentList() {
+      alert('수강생 명단을 내보냅니다.\n\n포함 정보:\n• 이름, 연락처, 전공\n• 조 배정 현황\n• 멘토 정보\n• 진행률\n\n형식: Excel, CSV, PDF');
+    }
+
+    function removeStudent(studentName) {
+      if (confirm(`${studentName} 수강생을 정말 삭제하시겠습니까?\n\n⚠️ 주의사항:\n• 해당 수강생의 모든 데이터가 삭제됩니다\n• 조 편성에서도 제외됩니다\n• 이 작업은 되돌릴 수 없습니다`)) {
+        alert(`${studentName} 수강생이 삭제되었습니다.\n\n📋 처리 완료:\n• 수강생 명단에서 제거\n• 조 편성에서 제외\n• 관련 데이터 삭제\n\n페이지를 새로고침하여 변경사항을 확인하세요.`);
+        // 실제 구현에서는 여기서 서버로 삭제 요청을 보내고 페이지를 새로고침하거나 DOM에서 해당 행을 제거합니다.
+      }
+    }
+
+    function updateMentor(teamNumber, mentorName) {
+      if (mentorName.trim() === '') {
+        alert('멘토 이름을 입력해주세요.');
+        return;
+      }
+      
+      alert(`${teamNumber}조의 담당 멘토가 "${mentorName}"으로 변경되었습니다.\n\n📋 변경사항:\n• 조: ${teamNumber}조\n• 새 담당 멘토: ${mentorName}\n• 멘토링 일정 및 연락처 정보가 업데이트됩니다`);
+      
+      // 실제 구현에서는 여기서 서버로 멘토 정보 업데이트 요청을 보냅니다.
+      console.log(`Team ${teamNumber} mentor updated to: ${mentorName}`);
+    }
+
+    // 설문 데이터 관련 함수들
+    function loadSurveyData() {
+      if (confirm('설문 데이터를 최신 상태로 불러오시겠습니까?\n\n• 완료된 설문 응답 동기화\n• 팀 편성용 데이터 갱신\n• 수강생 정보 업데이트')) {
+        // 로딩 표시
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = '불러오는 중...';
+        button.disabled = true;
+        
+        // 시뮬레이션된 데이터 로딩 (실제로는 서버에서 가져옴)
+        setTimeout(() => {
+          alert('설문 데이터를 성공적으로 불러왔습니다!\n\n📊 업데이트 내용:\n• 새로운 설문 응답 3건\n• 수강생 프로필 업데이트\n• 팀 편성 알고리즘 데이터 준비 완료\n\n이제 최신 정보를 바탕으로 팀 편성을 진행할 수 있습니다.');
+          
+          // 설문 상태 업데이트
+          document.getElementById('surveyStatus').textContent = '26명 완료 / 28명 전체 (92.9%)';
+          
+          button.textContent = originalText;
+          button.disabled = false;
+        }, 2000);
+      }
+    }
+
+    function openSurveyManager() {
+      if (confirm('파일 보관소의 설문 관리 페이지로 이동하시겠습니까?\n\n• 설문 응답 확인\n• 설문 내용 수정\n• 미완료 수강생 관리')) {
+        window.open('file-storage.html', '_blank');
+      }
+    }
+
+    // 자동 조 편성 폼에 설문 데이터 활용 로직 추가
+    document.getElementById('teamFormationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // 설문 데이터 확인
+      const surveyCompletionRate = 92.9; // 실제로는 동적으로 계산
+      
+      if (surveyCompletionRate < 80) {
+        if (!confirm(`설문 완료율이 ${surveyCompletionRate}%입니다.\n\n미완료 수강생이 있어 정확한 편성이 어려울 수 있습니다.\n그래도 진행하시겠습니까?`)) {
+          return;
+        }
+      }
+      
+      const method = document.getElementById('formationMethod').value;
+      const teamSize = document.getElementById('teamSize').value;
+      
+      const considerations = [];
+      if (document.getElementById('considerGender').checked) considerations.push('성비 균등');
+      if (document.getElementById('considerMajor').checked) considerations.push('전공 분산');
+      if (document.getElementById('considerExperience').checked) considerations.push('경험 수준');
+      if (document.getElementById('considerPersonality').checked) considerations.push('성격 유형');
+      
+      // 설문 데이터 기반 팀 편성 시뮬레이션
+      const surveyBasedAnalysis = `
+🔍 설문 데이터 기반 분석:
+
+📊 수강생 구성:
+• 프로그래밍 고급자: 8명 (28.6%)
+• 프로그래밍 중급자: 12명 (42.9%)
+• 프로그래밍 초급자: 8명 (28.6%)
+
+🎯 관심 분야 분포:
+• NLP/챗봇: 12명
+• 컴퓨터 비전: 8명
+• 데이터 분석: 15명
+• 웹 개발: 10명
+
+👥 협업 스타일:
+• 적극적 참여형: 10명
+• 지원형: 8명
+• 독립형: 6명
+• 균형형: 4명
+
+⏰ 활동 시간대:
+• 오후 선호: 18명
+• 저녁 선호: 14명
+• 주말 활동 가능: 20명
+      `;
+      
+      alert(`설문 데이터를 활용한 자동 조 편성을 실행합니다!
+      
+📋 편성 설정:
+• 편성 방식: ${document.getElementById('formationMethod').options[document.getElementById('formationMethod').selectedIndex].text}
+• 조당 인원: ${teamSize}명
+• 고려사항: ${considerations.join(', ')}
+
+${surveyBasedAnalysis}
+
+✅ 편성 결과:
+• 총 7개 조 생성 (28명 → 7조)
+• 각 조별 스킬 밸런스 최적화
+• 관심 분야 기반 프로젝트 매칭
+• 활동 시간대 호환성 고려
+• 성격 유형 조화 분석
+
+🎯 편성 품질 점수: 94/100
+• 기술 수준 균형: 98점
+• 관심 분야 매칭: 92점
+• 협업 호환성: 96점
+• 시간대 일치도: 89점
+
+📝 권장 사항:
+• 3조와 5조는 프로젝트 주제 재검토 필요
+• 모든 조에 멘토 배정 완료
+• 팀 빌딩 워크샵 권장 (1, 4, 6조)`);
+    });
+  </script>
+</body>
+</html> 

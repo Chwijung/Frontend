@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-X 운영 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800" style="overflow-x: hidden;">
+  <div class="max-w-7xl mx-auto p-6 space-y-8">
+
+    <!-- 온보딩 안내 -->
+    <section class="bg-white shadow rounded-xl p-6">
+      <h2 class="text-2xl font-bold mb-2">📘 AI-X 과정 소개</h2>
+      <p class="mb-2">2025년 AI-X 3기 교육과정에 오신 것을 환영합니다!</p>
+      <ul class="list-disc pl-5 text-sm space-y-1">
+        <li>교육 목표: 실전 중심의 AI 프로젝트 역량 향상</li>
+        <li>운영 기간: 2025.06.18 ~ 2025.08.30</li>
+        <li>주요 시스템: 과제 제출, 팀 관리, 멘토링 기록, 발표 관리</li>
+      </ul>
+    </section>
+
+    <!-- 주차별 과제 안내 -->
+    <section class="bg-white shadow rounded-xl p-6">
+      <h2 class="text-2xl font-bold mb-4">📝 주차별 과제 안내</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="border p-4 rounded">
+          <h3 class="font-semibold">1주차 - 미니 프로젝트</h3>
+          <p class="text-sm">목표: 주제 설정 및 기획안 작성</p>
+          <p class="text-xs mt-1 text-blue-600 underline cursor-pointer">📄 산출물 안내 보기</p>
+        </div>
+        <div class="border p-4 rounded">
+          <h3 class="font-semibold">2주차 - 중간 발표</h3>
+          <p class="text-sm">목표: 기능 개발 및 피드백 수렴</p>
+          <p class="text-xs mt-1 text-blue-600 underline cursor-pointer">📄 발표 가이드 보기</p>
+        </div>
+        <div class="border p-4 rounded">
+          <h3 class="font-semibold">3주차 - 최종 발표</h3>
+          <p class="text-sm">목표: 프로젝트 완성 및 시연</p>
+          <p class="text-xs mt-1 text-blue-600 underline cursor-pointer">📄 발표 가이드 보기</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 조 편성 시스템 -->
+    <section class="bg-white shadow rounded-xl p-6">
+      <h2 class="text-2xl font-bold mb-4">👥 팀 구성 및 관리</h2>
+      <p class="text-sm mb-2">자동 조 편성 기능을 사용하거나 수동으로 구성할 수 있습니다.</p>
+      <div class="flex gap-4 mb-4">
+        <button class="bg-blue-600 text-white px-4 py-2 rounded">조 자동 편성</button>
+        <button class="bg-gray-200 px-4 py-2 rounded">조 수동 등록</button>
+      </div>
+      <ul class="list-disc pl-5 text-sm">
+        <li>1조: 김하늘, 박민서, 송지우</li>
+        <li>2조: 이현서, 최창재, 배경관</li>
+      </ul>
+    </section>
+
+    <!-- 멘토링 기록 -->
+    <section class="bg-white shadow rounded-xl p-6">
+      <h2 class="text-2xl font-bold mb-4">💬 멘토링 기록 시스템</h2>
+      <p class="text-sm mb-2">수강생별 1:1 면담 및 멘토링 내용을 남기고, 이력을 조회할 수 있습니다.</p>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="border p-4 rounded">
+          <h3 class="font-semibold">배경관 (2조)</h3>
+          <textarea placeholder="멘토링 내용 입력..." class="w-full border rounded p-2 text-sm"></textarea>
+          <button class="mt-2 bg-green-600 text-white px-3 py-1 rounded text-sm">기록 저장</button>
+        </div>
+        <div class="border p-4 rounded">
+          <h3 class="font-semibold">최창재 (2조)</h3>
+          <textarea placeholder="멘토링 내용 입력..." class="w-full border rounded p-2 text-sm"></textarea>
+          <button class="mt-2 bg-green-600 text-white px-3 py-1 rounded text-sm">기록 저장</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 운영자용 행정 시스템 -->
+    <section class="bg-white shadow rounded-xl p-6">
+      <h2 class="text-2xl font-bold mb-4">📑 운영자 행정 도구</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="font-semibold mb-2">회의실 사용 신청</h3>
+          <input type="date" class="border p-2 rounded w-full mb-2">
+          <input type="text" placeholder="사용 시간 / 목적" class="border p-2 rounded w-full">
+          <button class="mt-2 bg-blue-600 text-white px-4 py-1 rounded text-sm">신청하기</button>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-2">수행비용 정산 입력</h3>
+          <input type="text" placeholder="조명비, 도구비 등" class="border p-2 rounded w-full mb-2">
+          <input type="number" placeholder="금액" class="border p-2 rounded w-full">
+          <button class="mt-2 bg-blue-600 text-white px-4 py-1 rounded text-sm">정산 등록</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

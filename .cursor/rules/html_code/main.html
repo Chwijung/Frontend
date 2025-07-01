@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-X 기수 운영 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    html, body {
+      overflow-x: hidden;
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100">
+  <!-- 헤더 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <a href="index.html?authenticated=true" class="text-indigo-600 hover:text-indigo-800">← 전체 기수 목록으로</a>
+          <h1 class="text-2xl font-bold text-indigo-700" id="headerTitle">🎓 AI-X 통합 운영 시스템</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">운영진: 권회은</span>
+          <button id="alertBtn" class="relative bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600">
+            🚨 긴급 알림 <span id="alertCount" class="bg-white text-red-500 text-xs px-2 py-1 rounded-full ml-1">3</span>
+          </button>
+          <button onclick="window.location.href='admin.html'" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">시스템 관리</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto p-6 space-y-8">
+    <!-- 메인 헤더 -->
+    <header class="text-center py-8">
+      <h2 class="text-4xl font-bold text-gray-800 mb-4" id="cohortMainTitle">AI-X 교육과정 운영 관리 시스템</h2>
+      <p class="text-xl text-gray-600" id="cohortSubtitle">운영진·코치를 위한 통합 관리 플랫폼</p>
+    </header>
+
+    <!-- 핵심 기능 카드 -->
+    <section class="grid md:grid-cols-3 gap-6">
+      <!-- 기수 운영 관리 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" id="cohortManagementCard">
+        <div class="flex items-center justify-between mb-4">
+          <div class="bg-blue-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+          <span class="text-2xl font-bold text-blue-600" id="cohortNumber">3기</span>
+        </div>
+        <h3 class="font-semibold text-gray-800" id="cohortCardTitle">3기 기수 운영 관리</h3>
+        <p class="text-sm text-gray-600 mt-2">기수 상세 관리, 진행률 모니터링, 일정 관리</p>
+      </div>
+
+      <!-- 팀 관리 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='team-management.html'">
+        <div class="flex items-center justify-between mb-4">
+          <div class="bg-purple-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-purple-600" id="studentCount">24명</span>
+        </div>
+        <h3 class="font-semibold text-gray-800">수강생·조 관리</h3>
+        <p class="text-sm text-gray-600 mt-2">조 편성, 출석 관리, 수강생 현황</p>
+      </div>
+
+      <!-- 과제 시스템 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='project-system.html'">
+        <div class="flex items-center justify-between mb-4">
+          <div class="bg-orange-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-orange-600">7개 대기</span>
+        </div>
+        <h3 class="font-semibold text-gray-800">과제 출제·평가</h3>
+        <p class="text-sm text-gray-600 mt-2">과제 등록, 제출 현황, 채점 관리</p>
+      </div>
+    </section>
+
+    <!-- 추가 기능 카드 -->
+    <section class="grid md:grid-cols-3 gap-6">
+      <!-- 수강생 설문 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='student-onboarding.html'">
+        <div class="flex items-center justify-between mb-4">
+          <div class="bg-indigo-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6l2 2h6a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H9a2 2 0 00-2 2v0z"></path>
+            </svg>
+          </div>
+          <div class="flex flex-col items-end">
+            <span class="text-sm font-medium text-green-600">89.3% 완료</span>
+            <span class="text-xs text-orange-600">3명 미완료</span>
+          </div>
+        </div>
+        <h3 class="font-semibold text-gray-800">📝 수강생 설문</h3>
+        <p class="text-sm text-gray-600 mt-2">팀 편성용 정보 수집, 설문 관리</p>
+      </div>
+
+      <!-- 회의 스크럼 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='meeting-scrum.html'">
+        <div class="flex items-center justify-between mb-4">
+          <div class="bg-red-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h2m0-8h10a2 2 0 012 2v6a2 2 0 01-2 2h-2m-6-4h.01M17 11h.01"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-red-600">진행중</span>
+        </div>
+        <h3 class="font-semibold text-gray-800">프로젝트 관리</h3>
+        <p class="text-sm text-gray-600 mt-2">데일리 체크인, 운영 회의, 진행 점검</p>
+      </div>
+
+      <!-- 자료 보관소 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='file-storage.html'">
+        <div class="flex items-center justify-between mb-4">
+          <div class="bg-yellow-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2v2zm0 0h18v2a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-yellow-600">23% 사용</span>
+        </div>
+        <h3 class="font-semibold text-gray-800">교육자료 관리</h3>
+        <p class="text-sm text-gray-600 mt-2">강의자료, 과제, 제출물 중앙 관리</p>
+      </div>
+    </section>
+
+    <!-- 추가 관리 기능 -->
+    <section class="grid md:grid-cols-3 gap-6">
+      <!-- 수강생 문의 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='student-inquiry.html'">
+        <div class="flex items-center justify-between mb-4">
+          <div class="bg-emerald-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+          </div>
+          <div class="flex flex-col items-end">
+            <span class="text-sm font-medium text-red-600">5개 미답변</span>
+            <span class="text-xs text-emerald-600">12개 총 문의</span>
+          </div>
+        </div>
+        <h3 class="font-semibold text-gray-800">💬 수강생 문의</h3>
+        <p class="text-sm text-gray-600 mt-2">학습 문의, 기술 지원, 상담 요청 관리</p>
+      </div>
+
+      <!-- 멘토링 일지 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='mentoring-log.html'">
+        <div class="flex items-center justify-between mb-4">
+          <div class="bg-indigo-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <div class="flex flex-col items-end">
+            <span class="text-sm font-medium text-red-600">3개 미작성</span>
+            <span class="text-xs text-indigo-600">이번 주</span>
+          </div>
+        </div>
+        <h3 class="font-semibold text-gray-800">📋 멘토링 일지</h3>
+        <p class="text-sm text-gray-600 mt-2">조별 멘토링 기록, 진행 상황 관리</p>
+      </div>
+
+      <!-- 상담일정 관리 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='counseling-schedule.html'">
+        <div class="flex items-center justify-between mb-4">
+          <div class="bg-teal-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <div class="flex flex-col items-end">
+            <span class="text-sm font-medium text-teal-600">15개 예정</span>
+            <span class="text-xs text-orange-600">2개 수정 요청</span>
+          </div>
+        </div>
+        <h3 class="font-semibold text-gray-800">📅 상담일정 관리</h3>
+        <p class="text-sm text-gray-600 mt-2">취업 상담, 개별 멘토링 스케줄 관리</p>
+      </div>
+    </section>
+
+    <!-- 핵심 기능: 스마트 포트폴리오 -->
+    <section class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-xl p-8 text-white mb-8">
+      <div class="text-center">
+        <h3 class="text-3xl font-bold mb-4">🚀 스마트 포트폴리오 자동 생성기</h3>
+        <p class="text-lg opacity-90 mb-6">학생 산출물을 자동으로 수집하여 취업용 포트폴리오 생성</p>
+        <div class="grid md:grid-cols-3 gap-4 mb-6">
+          <div class="bg-white bg-opacity-20 rounded-lg p-4">
+            <p class="font-bold text-2xl">100%</p>
+            <p class="text-sm">포트폴리오 완성률</p>
+            <p class="text-xs opacity-75">↑ 70%에서 개선</p>
+          </div>
+          <div class="bg-white bg-opacity-20 rounded-lg p-4">
+            <p class="font-bold text-2xl">15시간</p>
+            <p class="text-sm">강사 시간 절약</p>
+            <p class="text-xs opacity-75">주당</p>
+          </div>
+          <div class="bg-white bg-opacity-20 rounded-lg p-4">
+            <p class="font-bold text-2xl">9.2점</p>
+            <p class="text-sm">학생 만족도</p>
+            <p class="text-xs opacity-75">↑ 7.1에서 개선</p>
+          </div>
+        </div>
+        <button onclick="window.location.href='portfolio-generator.html'" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+          포트폴리오 생성기 열기 →
+        </button>
+      </div>
+    </section>
+
+    <!-- 현재 진행 상황 -->
+    <section class="grid md:grid-cols-2 gap-8">
+      <!-- 실시간 알림 -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h3 class="text-xl font-semibold mb-4 flex items-center">
+          <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM7 7h10v6H7V7z"></path>
+          </svg>
+          실시간 알림
+        </h3>
+        <div id="alertsList" class="space-y-3">
+          <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <div class="flex items-center space-x-3">
+              <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+              <span class="text-sm">최종발표 7월 7일 예정</span>
+            </div>
+            <span class="text-xs text-blue-600">정보</span>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg border border-purple-200">
+            <div class="flex items-center space-x-3">
+              <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+              <span class="text-sm">2조 6월 25일 멘토링 일지 미작성</span>
+            </div>
+            <span class="text-xs text-purple-600">정보</span>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+            <div class="flex items-center space-x-3">
+              <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              <span class="text-sm">3조 중간발표 산출물 미제출</span>
+            </div>
+            <span class="text-xs text-green-600">알림</span>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+            <div class="flex items-center space-x-3">
+              <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              <span class="text-sm">3조 멘토링 일지 미작성</span>
+            </div>
+            <span class="text-xs text-green-600">알림</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 진행 현황 차트 -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h3 class="text-xl font-semibold mb-4 flex items-center">
+          <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          <span id="chartTitle">AI-X 3기 진행 현황</span>
+        </h3>
+        <div style="position: relative; height: 250px; width: 100%;">
+          <canvas id="progressChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // URL 파라미터로 기수 정보 동적 로드
+    function loadCohortInfo() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cohortId = urlParams.get('cohort') || 'ai-x-3rd';
+      
+      // 현재 기수 정보를 localStorage에 저장
+      localStorage.setItem('currentCohort', cohortId);
+      
+      const cohortData = {
+        'ai-x-3rd': {
+          name: 'AI-X 3기',
+          number: '3기',
+          students: '24명',
+          status: '진행중'
+        },
+        'ai-x-2nd': {
+          name: 'AI-X 2기',
+          number: '2기',
+          students: '18명',
+          status: '완료'
+        },
+        'ai-x-1st': {
+          name: 'AI-X 1기',
+          number: '1기',
+          students: '15명',
+          status: '완료'
+        }
+      };
+
+      const cohort = cohortData[cohortId];
+      if (cohort) {
+        document.getElementById('headerTitle').textContent = `🎓 ${cohort.name} 통합 운영 시스템`;
+        document.getElementById('cohortMainTitle').textContent = `${cohort.name} 교육과정 운영 관리 시스템`;
+        document.getElementById('cohortSubtitle').textContent = `${cohort.name} 운영진·코치를 위한 통합 관리 플랫폼`;
+        document.getElementById('cohortNumber').textContent = cohort.number;
+        document.getElementById('cohortCardTitle').textContent = `${cohort.number} 기수 운영 관리`;
+        document.getElementById('studentCount').textContent = cohort.students;
+        document.getElementById('chartTitle').textContent = `${cohort.name} 진행 현황`;
+        document.title = `${cohort.name} 운영 시스템`;
+        
+        // 기수 운영 관리 카드 클릭 이벤트 설정
+        document.getElementById('cohortManagementCard').onclick = function() {
+          window.location.href = `cohort-detail.html?cohort=${cohortId}`;
+        };
+      }
+    }
+
+    // 차트 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCohortInfo();
+      
+      const ctx = document.getElementById('progressChart');
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['채점 완료', '채점 대기', '출제 예정'],
+            datasets: [{
+              data: [35, 45, 20],
+              backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }
+        });
+      }
+    });
+
+    // 긴급 알림 버튼 클릭
+    document.getElementById('alertBtn').addEventListener('click', function() {
+      alert('운영진 긴급 알림이 3개 있습니다!\n\n1. 김하늘 학습자 멘토링 일지 3일 미작성 (긴급)\n2. 7개 과제 채점 대기중 (주의)\n3. 이지윤 학습자 출석률 저조 80% - 상담 필요 (주의)');
+    });
+  </script>
+</body>
+</html>

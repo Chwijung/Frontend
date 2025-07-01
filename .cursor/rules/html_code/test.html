@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>교육 과정 초기 세팅</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6" style="overflow-x: hidden;">
+  <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-8">
+    <h1 class="text-2xl font-bold mb-6">멘토/운영자 초기 세팅</h1>
+
+    <!-- Step 1: 과정 정보 입력 -->
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">1. 교육과정 정보</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="text" placeholder="과정명 (예: AI-X 3기)" class="border p-2 rounded w-full">
+        <input type="text" placeholder="회차명 (예: 3기)" class="border p-2 rounded w-full">
+        <input type="date" placeholder="시작일" class="border p-2 rounded w-full">
+        <input type="date" placeholder="종료일" class="border p-2 rounded w-full">
+      </div>
+    </div>
+
+    <!-- Step 2: 폴더 구조 선택 -->
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">2. 기본 폴더 구조 선택</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" checked>
+          <span>1주차 / 과제</span>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" checked>
+          <span>2주차 / 과제</span>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox">
+          <span>중간발표</span>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" checked>
+          <span>최종산출물</span>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox">
+          <span>회고작성</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Step 3: 템플릿 업로드 -->
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">3. 템플릿 등록 (선택)</h2>
+      <input type="file" class="border p-2 rounded w-full">
+      <p class="text-sm text-gray-500 mt-1">예: 과제 제출 양식, 발표PPT, 회고 프롬프트</p>
+    </div>
+
+    <!-- Step 4: 조 편성 방법 -->
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">4. 조 편성 방법</h2>
+      <select class="border p-2 rounded w-full">
+        <option selected disabled>조 편성 방식을 선택하세요</option>
+        <option>수동 등록</option>
+        <option>자동 생성</option>
+        <option>스프레드시트 연동</option>
+      </select>
+    </div>
+
+    <!-- Step 5: 권한 설정 -->
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">5. 권한 설정</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-medium mb-1">업로드 권한</label>
+          <select class="border p-2 rounded w-full">
+            <option>수강생만 가능</option>
+            <option>멘토도 가능</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-medium mb-1">열람 권한</label>
+          <select class="border p-2 rounded w-full">
+            <option>전체 공개</option>
+            <option>조별만 보기 가능</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-medium mb-1">수정 권한</label>
+          <select class="border p-2 rounded w-full">
+            <option>본인만 가능</option>
+            <option>조 내 공유</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="text-right">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg">저장하고 시작하기</button>
+    </div>
+  </div>
+</body>
+</html>

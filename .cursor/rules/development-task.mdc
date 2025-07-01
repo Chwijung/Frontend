@@ -1,0 +1,57 @@
+---
+description: development tasks
+globs: 
+alwaysApply: false
+---
+# AI-X 교육과정 운영 시스템 프론트엔드 개발 태스크
+
+## 프로젝트 개요
+HTML 와이어프레임을 기반으로 한 리액트 프론트엔드 AI-X 교육과정 통합 운영 시스템 개발
+
+---
+
+# AI-X 교육과정 운영 시스템 프론트엔드 개발 태스크
+
+## 프로젝트 개요
+HTML 와이어프레임을 기반으로 한 리액트 프론트엔드 AI-X 교육과정 통합 운영 시스템 개발
+
+---
+
+## 개발 태스크 목록
+
+| Task ID | Title | Description | Status | Dependencies | Priority | Reference HTML | Details | Test Strategy |
+|---------|-------|-------------|--------|--------------|----------|----------------|---------|---------------|
+| **AUTH-001** | 로그인 페이지 구현 | 로그인/로그아웃 UI 및 인증 상태 관리 | Not Started | - | High | index.html | - 로그인 폼 컴포넌트 (이메일/비밀번호)<br>- JWT 토큰 localStorage 저장<br>- 권한별 라우팅 (관리자/멘토/학생)<br>- 자동 로그인 유지 기능<br>- 로그인 실패 에러 처리 | 로그인/로그아웃 플로우 테스트 |
+| **CORE-001** | 기수 관리 페이지 | 기수 목록 및 관리 인터페이스 | Not Started | AUTH-001 | High | cohort-management.html | - 기수 목록 카드 레이아웃<br>- 진행 중/완료된 기수 구분<br>- 기수별 통계 표시 (수강생, 진행률)<br>- 새 기수 생성 모달<br>- 기수 복사 기능 | CRUD 폼 및 목록 렌더링 테스트 |
+| **CORE-002** | 메인 대시보드 구현 | 통합 대시보드 UI | Not Started | CORE-001 | High | main.html | - 기수별 기능 카드 네비게이션<br>- 실시간 알림 패널<br>- 진행률 차트 컴포넌트<br>- 빠른 액세스 링크<br>- 기수 전환 드롭다운 | 대시보드 레이아웃 테스트 |
+| **CORE-003** | 기수 생성 페이지 | 새 기수 생성 및 설정 인터페이스 | Not Started | CORE-001 | High | cohort-create.html | - 기수 생성 폼 컴포넌트<br>- 과정 템플릿 선택 (표준/집중)<br>- 일정 자동 생성 기능<br>- 기존 기수 복사 옵션<br>- 자동 설정 체크박스 그룹 | 폼 유효성 검사 및 제출 테스트 |
+| **CORE-004** | 기수 상세 관리 페이지 | 개별 기수 상세 정보 및 관리 | Not Started | CORE-001 | High | cohort-detail.html | - 기수 상태 정보 표시<br>- 실시간 통계 위젯<br>- 빠른 관리 메뉴<br>- 전체 일정 타임라인<br>- 기수 정보 수정 기능 | 실시간 데이터 업데이트 테스트 |
+| **DASHBOARD-001** | 관리자 대시보드 | 운영진 전용 대시보드 | Not Started | CORE-002 | High | dashboard.html | - 전체 기수 현황 요약<br>- 멘토 활동 모니터링<br>- 학습자 진도 추적<br>- 시스템 상태 표시<br>- 알림 및 이벤트 로그 | 데이터 시각화 테스트 |
+| **TEAM-001** | 팀 관리 시스템 | 조 편성 및 관리 | Not Started | CORE-002 | High | team-management.html | - 조별 멤버 카드 UI<br>- 드래그 앤 드롭 멤버 이동<br>- 자동 조 편성 설정 폼<br>- 조별 통계 및 성과 표시<br>- 멘토 배정 인터페이스 | 드래그 앤 드롭 기능 테스트 |
+| **SURVEY-001** | 설문 관리 시스템 | 설문 생성/관리 및 온보딩 | Not Started | TEAM-001 | High | student-onboarding.html | - 설문 목록 및 상태 관리<br>- 설문 활성화/비활성화 토글<br>- 응답 현황 실시간 표시<br>- 설문 결과 차트 시각화<br>- 팀 빌딩용 설문 템플릿 | 폼 제출 및 차트 렌더링 테스트 |
+| **PROJECT-001** | 발표 관리 시스템 | 프로젝트 및 발표 관리 | Not Started | TEAM-001 | High | project-system.html | - 발표 일정 카드 레이아웃<br>- 산출물 제출 현황 추적<br>- 진행 중/완료/예정 탭 구조<br>- 파일 업로드 인터페이스<br>- 발표 순서 관리 UI | 탭 네비게이션 및 파일 업로드 테스트 |
+| **FILE-001** | 자료 보관소 시스템 | 파일 관리 시스템 | Not Started | PROJECT-001 | High | file-storage.html | - 파일 브라우저 인터페이스<br>- 폴더 구조 네비게이션<br>- 드래그 앤 드롭 파일 업로드<br>- 파일 검색 및 필터링<br>- 파일 미리보기 기능 | 파일 업로드 및 다운로드 테스트 |
+| **MENTOR-001** | 멘토링 기록 시스템 | 멘토링 관리 | Not Started | TEAM-001 | High | mentoring-system.html | - 멘토링 현황 카드 UI<br>- 학습자별 멘토링 이력<br>- 멘토링 일지 작성 폼<br>- 멘토별 통계 대시보드<br>- 미작성 일지 알림 | 폼 입력 및 데이터 필터링 테스트 |
+| **MENTOR-002** | 멘토링 일지 관리 | 멘토링 일지 작성 현황 관리 | Not Started | MENTOR-001 | High | mentoring-log.html | - 조별 멘토링 현황 카드<br>- 미작성 일지 알림 시스템<br>- 멘토링 스케줄 캘린더<br>- 일지 작성 상태 실시간 표시<br>- 멘토별 알림 발송 기능 | 실시간 상태 업데이트 테스트 |
+| **SMART-MENTOR-001** | 스마트 멘토링 추적 | AI 멘토링 분석 | Not Started | MENTOR-001 | Medium | smart-mentoring.html | - 실시간 멘토링 모니터링<br>- AI 위험 학습자 감지 UI<br>- 학습자별 진도 시각화<br>- 멘토 효율성 차트<br>- 자동 일지 생성 시뮬레이션 | AI 분석 결과 시각화 테스트 |
+| **COUNSEL-001** | 상담 일정 관리 | 상담 스케줄링 | Not Started | MENTOR-001 | High | counseling-schedule.html | - 월별 캘린더 컴포넌트<br>- 일정 수정 요청 알림<br>- 상담 유형별 색상 구분<br>- 일정 충돌 방지 로직<br>- 알림 승인/거절 인터페이스 | 캘린더 인터랙션 테스트 |
+| **INQUIRY-001** | 수강생 문의 시스템 | 문의 관리 | Not Started | CORE-002 | Medium | student-inquiry.html | - 문의 목록 및 상태별 필터<br>- 미답변/답변완료 구분 UI<br>- 문의 카테고리별 분류<br>- 답변 작성 에디터<br>- 검색 및 정렬 기능 | 검색 필터 및 답변 시스템 테스트 |
+| **PORTFOLIO-001** | 포트폴리오 생성기 | 자동 포트폴리오 | Not Started | PROJECT-001 | Medium | portfolio-generator.html | - 학생별 포트폴리오 현황<br>- 자동 수집 상태 표시<br>- 조별 필터링 기능<br>- 포트폴리오 미리보기<br>- 생성 진행률 표시 | 진행률 업데이트 및 필터링 테스트 |
+| **MEETING-001** | 회의 및 스크럼 관리 | 회의 관리 시스템 | Not Started | TEAM-001 | Medium | meeting-scrum.html | - 조별 스크럼 현황 카드<br>- 실시간 진행 상태 표시<br>- 회의 참석자 관리<br>- 스크럼 통계 대시보드<br>- 회의 생성 모달 | 실시간 상태 업데이트 테스트 |
+| **ADMIN-001** | 관리자 도구 페이지 | 시스템 관리 도구 | Not Started | CORE-002 | Medium | admin.html | - 사용자 권한 관리<br>- 시스템 설정 인터페이스<br>- 로그 및 활동 모니터링<br>- 데이터 백업/복원 UI<br>- 시스템 통계 및 성능 지표 | 권한 관리 및 설정 변경 테스트 |
+| **SETUP-001** | 초기 설정 페이지 | 교육과정 초기 세팅 | Not Started | AUTH-001 | Low | test.html | - 교육과정 정보 입력 폼<br>- 폴더 구조 선택 체크박스<br>- 템플릿 파일 업로드<br>- 조 편성 방법 설정<br>- 권한 설정 드롭다운 | 초기 설정 저장 및 적용 테스트 |
+| **CHART-001** | 데이터 시각화 컴포넌트 | 전체 시스템의 차트 및 그래프 구현 | Not Started | CORE-002 | - | - Chart.js 기반 차트 컴포넌트<br>- 진행률 바 및 도넛 차트<br>- 실시간 데이터 업데이트<br>- 반응형 차트 레이아웃<br>- 차트 데이터 내보내기 | 차트 렌더링 및 데이터 바인딩 테스트 |
+| **NOTIF-001** | 알림 시스템 구현 | 전체 시스템의 실시간 알림 인터페이스 | Not Started | CORE-002 | Low | - | - 토스트 알림 컴포넌트<br>- 알림 센터 패널<br>- 읽음/안읽음 상태 관리<br>- 알림 타입별 아이콘<br>- 알림 설정 페이지 | 알림 표시 및 상태 관리 테스트 |
+| **RESPONSIVE-001** | 반응형 디자인 구현 | 모든 페이지의 모바일/태블릿 최적화 | Not Started | CHART-001 | Medium | - | - Tailwind CSS 반응형 유틸리티<br>- 모바일 네비게이션 메뉴<br>- 터치 인터랙션 최적화<br>- 테이블 반응형 처리<br>- 모달 및 팝업 모바일 대응 | 다양한 디바이스 크기 테스트 |
+| **API-001** | API 서비스 레이어 구현 | 백엔드 API 연동을 위한 기본 서비스 레이어 | Not Started | AUTH-001 | High | - | - Axios 기반 HTTP 클라이언트 설정<br>- API 요청/응답 인터셉터<br>- 에러 핸들링 미들웨어<br>- 로딩 상태 관리<br>- 토큰 자동 갱신 로직 | API 요청/응답 플로우 테스트 |
+| **API-002** | 인증 API 연동 | 로그인/로그아웃 백엔드 연동 | Not Started | API-001 | High | - | - JWT 토큰 기반 인증 API<br>- 자동 로그인 처리<br>- 토큰 만료 시 재발급<br>- 권한별 API 접근 제어<br>- 로그아웃 시 토큰 무효화 | 인증 플로우 통합 테스트 |
+| **API-003** | 기수 관리 API 연동 | 기수 CRUD 백엔드 연동 | Not Started | API-002 | High | - | - 기수 목록 조회 API<br>- 기수 생성/수정/삭제 API<br>- 기수 상태 업데이트 API<br>- 기수 통계 데이터 API<br>- 기수 복사 API | 기수 관리 CRUD 테스트 |
+| **API-004** | 사용자 관리 API 연동 | 수강생/멘토 관리 백엔드 연동 | Not Started | API-003 | High | - | - 사용자 목록 조회 API<br>- 사용자 프로필 관리 API<br>- 권한 관리 API<br>- 팀 배정 API<br>- 멘토 배정 API | 사용자 관리 통합 테스트 |
+| **API-005** | 프로젝트 관리 API 연동 | 프로젝트/과제 관리 백엔드 연동 | Not Started | API-004 | High | - | - 프로젝트 등록/수정 API<br>- 과제 제출 API<br>- 파일 업로드/다운로드 API<br>- 평가 관리 API<br>- 진행률 추적 API | 프로젝트 관리 플로우 테스트 |
+| **API-006** | 멘토링 시스템 API 연동 | 멘토링 관련 백엔드 연동 | Not Started | API-005 | High | - | - 멘토링 일지 CRUD API<br>- 멘토링 스케줄 API<br>- 상담 예약 관리 API<br>- 멘토링 통계 API<br>- 알림 발송 API | 멘토링 시스템 통합 테스트 |
+| **API-007** | 실시간 데이터 연동 | WebSocket/SSE 기반 실시간 업데이트 | Not Started | API-006 | Medium | - | - WebSocket 연결 관리<br>- 실시간 알림 수신<br>- 진행률 실시간 업데이트<br>- 상태 변경 실시간 반영<br>- 연결 끊김 처리 및 재연결 | 실시간 데이터 동기화 테스트 |
+| **API-008** | 데이터 캐싱 및 최적화 | API 성능 최적화 및 캐싱 전략 | Not Started | API-007 | Medium | - | - React Query/SWR 데이터 캐싱<br>- 무한 스크롤 구현<br>- 페이지네이션 최적화<br>- 낙관적 업데이트<br>- 에러 재시도 메커니즘 | 성능 및 사용자 경험 테스트 |
+| **INTEGRATION-001** | 백엔드 통합 테스트 | 전체 시스템 백엔드 연동 검증 | Not Started | API-008 | High | - | - E2E 테스트 시나리오 작성<br>- API 통합 테스트<br>- 데이터 플로우 검증<br>- 에러 시나리오 테스트<br>- 성능 테스트 및 최적화 | 전체 시스템 통합 테스트 |
+
+
+---

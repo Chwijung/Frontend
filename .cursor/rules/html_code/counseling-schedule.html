@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상담일정 관리 - AI-X 운영 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      overflow-x: hidden;
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-teal-50 to-cyan-100">
+  <!-- 헤더 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <button onclick="goBackToMain()" class="text-teal-600 hover:text-teal-800">
+            ← 메인으로
+          </button>
+          <h1 class="text-2xl font-bold text-teal-700">📅 상담일정 관리</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">운영진: 권회은</span>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm text-orange-600 font-medium">수정 요청 2개</span>
+            <span class="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto p-6 space-y-6">
+    <!-- 페이지 헤더 -->
+    <header class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">상담일정 관리</h2>
+          <p class="text-gray-600">AI-X 3기 취업 상담 및 개별 멘토링 스케줄을 관리하세요</p>
+        </div>
+        <div class="text-right">
+          <div class="text-2xl font-bold text-teal-600">15</div>
+          <div class="text-sm text-gray-500">총 예정 상담</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 수정 요청 알림 -->
+    <section class="bg-gradient-to-r from-red-500 to-red-400 rounded-xl shadow-xl p-6 text-white">
+      <h3 class="text-xl font-bold mb-4 flex items-center">
+        🔄 일정 수정 요청
+      </h3>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-white bg-opacity-20 rounded-lg p-4">
+          <p class="font-bold text-lg">김하늘 - 취업 상담</p>
+          <p class="text-sm opacity-90">7월 3일 → 7월 5일 변경 요청</p>
+          <p class="text-xs opacity-75">사유: 면접 일정 겹침</p>
+          <div class="mt-2 space-x-2">
+            <button class="bg-white text-green-500 px-3 py-1 rounded text-sm font-medium">승인</button>
+            <button class="bg-transparent border border-white text-white px-3 py-1 rounded text-sm">거절</button>
+          </div>
+        </div>
+        <div class="bg-white bg-opacity-20 rounded-lg p-4">
+          <p class="font-bold text-lg">박민수 - 개별 멘토링</p>
+          <p class="text-sm opacity-90">7월 4일 → 7월 6일 변경 요청</p>
+          <p class="text-xs opacity-75">사유: 개인 사정</p>
+          <div class="mt-2 space-x-2">
+            <button class="bg-white text-green-500 px-3 py-1 rounded text-sm font-medium">승인</button>
+            <button class="bg-transparent border border-white text-white px-3 py-1 rounded text-sm">거절</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 달력 및 일정 관리 -->
+    <section class="grid lg:grid-cols-3 gap-6">
+      <!-- 달력 -->
+      <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-semibold text-gray-800">7월 2024</h3>
+          <div class="flex items-center space-x-2">
+            <button class="p-2 hover:bg-gray-100 rounded-lg">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+            <button class="p-2 hover:bg-gray-100 rounded-lg">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 달력 그리드 -->
+        <div class="grid grid-cols-7 gap-1">
+          <!-- 요일 헤더 -->
+          <div class="text-center text-sm font-medium text-gray-600 p-2">일</div>
+          <div class="text-center text-sm font-medium text-gray-600 p-2">월</div>
+          <div class="text-center text-sm font-medium text-gray-600 p-2">화</div>
+          <div class="text-center text-sm font-medium text-gray-600 p-2">수</div>
+          <div class="text-center text-sm font-medium text-gray-600 p-2">목</div>
+          <div class="text-center text-sm font-medium text-gray-600 p-2">금</div>
+          <div class="text-center text-sm font-medium text-gray-600 p-2">토</div>
+
+          <!-- 1주차 -->
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 1일')">
+            <div class="text-sm font-medium">1</div>
+            <div class="mt-1 space-y-1">
+              <div class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded truncate">김민준 멘토링</div>
+            </div>
+          </div>
+
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50 bg-blue-50" onclick="openDayModal('7월 2일')">
+            <div class="text-sm font-medium">2</div>
+            <div class="mt-1 space-y-1">
+              <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded truncate">이지윤 취업상담</div>
+            </div>
+          </div>
+
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50 border-orange-400" onclick="openDayModal('7월 3일')">
+            <div class="text-sm font-medium">3</div>
+            <div class="mt-1 space-y-1">
+              <div class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded truncate">김하늘 취업상담</div>
+              <div class="text-xs text-orange-600">🔄 수정요청</div>
+            </div>
+          </div>
+
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50 border-orange-400" onclick="openDayModal('7월 4일')">
+            <div class="text-sm font-medium">4</div>
+            <div class="mt-1 space-y-1">
+              <div class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded truncate">박민수 멘토링</div>
+              <div class="text-xs text-orange-600">🔄 수정요청</div>
+            </div>
+          </div>
+
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 5일')">
+            <div class="text-sm font-medium">5</div>
+            <div class="mt-1 space-y-1">
+              <div class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded truncate">정수현 취업상담</div>
+            </div>
+          </div>
+
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 6일')">
+            <div class="text-sm font-medium">6</div>
+          </div>
+
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50 bg-red-50" onclick="openDayModal('7월 7일')">
+            <div class="text-sm font-medium">7</div>
+            <div class="mt-1 space-y-1">
+              <div class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded truncate">최종발표</div>
+            </div>
+          </div>
+
+          <!-- 2주차 -->
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 8일')"><div class="text-sm font-medium">8</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 9일')"><div class="text-sm font-medium">9</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 10일')">
+            <div class="text-sm font-medium">10</div>
+            <div class="mt-1 space-y-1">
+              <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded truncate">강민지 취업상담</div>
+            </div>
+          </div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 11일')"><div class="text-sm font-medium">11</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 12일')">
+            <div class="text-sm font-medium">12</div>
+            <div class="mt-1 space-y-1">
+              <div class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded truncate">박성민 멘토링</div>
+            </div>
+          </div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 13일')"><div class="text-sm font-medium">13</div></div>
+
+          <!-- 3주차 -->
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 14일')"><div class="text-sm font-medium">14</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 15일')">
+            <div class="text-sm font-medium">15</div>
+            <div class="mt-1 space-y-1">
+              <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded truncate">김하늘 취업상담</div>
+            </div>
+          </div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 16일')"><div class="text-sm font-medium">16</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 17일')"><div class="text-sm font-medium">17</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 18일')"><div class="text-sm font-medium">18</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 19일')"><div class="text-sm font-medium">19</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 20일')"><div class="text-sm font-medium">20</div></div>
+
+          <!-- 4주차 -->
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 21일')"><div class="text-sm font-medium">21</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 22일')"><div class="text-sm font-medium">22</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 23일')"><div class="text-sm font-medium">23</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 24일')"><div class="text-sm font-medium">24</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 25일')"><div class="text-sm font-medium">25</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 26일')"><div class="text-sm font-medium">26</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 27일')"><div class="text-sm font-medium">27</div></div>
+
+          <!-- 5주차 -->
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 28일')"><div class="text-sm font-medium">28</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 29일')"><div class="text-sm font-medium">29</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 30일')"><div class="text-sm font-medium">30</div></div>
+          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50" onclick="openDayModal('7월 31일')"><div class="text-sm font-medium">31</div></div>
+        </div>
+
+        <!-- 범례 -->
+        <div class="flex flex-wrap items-center gap-4 mt-4 text-sm">
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-blue-100 border border-blue-200 rounded"></div>
+            <span>개별 멘토링</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-green-100 border border-green-200 rounded"></div>
+            <span>취업 상담</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-purple-100 border border-purple-200 rounded"></div>
+            <span>취업 상담 (심화)</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-red-100 border border-red-200 rounded"></div>
+            <span>중요 일정</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-orange-100 border border-orange-400 rounded"></div>
+            <span>수정 요청</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 사이드바 -->
+      <div class="space-y-6">
+        <!-- 오늘의 일정 -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">오늘의 일정 (7/2)</h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+              <div>
+                <p class="font-medium text-sm">이지윤 취업상담</p>
+                <p class="text-xs text-gray-600">14:00 - 15:00</p>
+              </div>
+              <button class="text-green-600 hover:text-green-800 text-xs">상세</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 빠른 액션 -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">빠른 액션</h3>
+          <div class="space-y-3">
+            <button class="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 text-sm">
+              + 새 상담 일정 추가
+            </button>
+            <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-sm">
+              📧 일정 알림 발송
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 일정 상세/수정 모달 -->
+  <div id="dayModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-xl p-6 w-96 max-h-96 overflow-y-auto">
+      <div class="flex items-center justify-between mb-4">
+        <h3 id="modalTitle" class="text-lg font-bold text-gray-800">일정 관리</h3>
+        <button onclick="closeDayModal()" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <div id="modalContent" class="space-y-4">
+        <!-- 동적으로 채워질 내용 -->
+      </div>
+      
+      <div class="flex space-x-2 mt-6">
+        <button onclick="closeDayModal()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600">
+          닫기
+        </button>
+        <button class="flex-1 bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700">
+          저장
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
+    // 일정 데이터
+    const scheduleData = {
+      '7월 1일': [
+        { type: 'mentoring', student: '김민수', mentor: '김민준', time: '14:00-15:00', status: 'confirmed' }
+      ],
+      '7월 2일': [
+        { type: 'career', student: '이지윤', counselor: '박상담사', time: '14:00-15:00', status: 'confirmed' }
+      ],
+      '7월 3일': [
+        { type: 'career', student: '김하늘', counselor: '김상담사', time: '10:00-11:00', status: 'change_requested', reason: '면접 일정 겹침' }
+      ],
+      '7월 4일': [
+        { type: 'mentoring', student: '박민수', mentor: '이수정', time: '16:00-17:00', status: 'change_requested', reason: '개인 사정' }
+      ],
+      '7월 5일': [
+        { type: 'career', student: '정수현', counselor: '이상담사', time: '11:00-12:00', status: 'confirmed' }
+      ],
+      '7월 7일': [
+        { type: 'important', title: '최종발표', time: '10:00-16:00', status: 'confirmed' }
+      ],
+      '7월 10일': [
+        { type: 'career', student: '강민지', counselor: '박상담사', time: '13:00-14:00', status: 'confirmed' }
+      ],
+      '7월 12일': [
+        { type: 'mentoring', student: '정수현', mentor: '박성민', time: '14:00-15:00', status: 'confirmed' }
+      ],
+      '7월 15일': [
+        { type: 'career', student: '김하늘', counselor: '김상담사', time: '14:00-15:00', status: 'confirmed' }
+      ]
+    };
+
+    function openDayModal(day) {
+      const modal = document.getElementById('dayModal');
+      const title = document.getElementById('modalTitle');
+      const content = document.getElementById('modalContent');
+      
+      title.textContent = day + ' 일정';
+      
+      const daySchedules = scheduleData[day] || [];
+      
+      if (daySchedules.length === 0) {
+        content.innerHTML = `
+          <p class="text-gray-600">이 날에는 예정된 일정이 없습니다.</p>
+          <button class="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 mt-4">
+            + 새 일정 추가
+          </button>
+        `;
+      } else {
+        let html = '';
+        daySchedules.forEach((schedule, index) => {
+          const statusClass = schedule.status === 'change_requested' ? 'border-orange-400 bg-orange-50' : 'border-gray-200';
+          const statusText = schedule.status === 'change_requested' ? '수정 요청됨' : '확정';
+          const statusColor = schedule.status === 'change_requested' ? 'text-orange-600' : 'text-green-600';
+          
+          html += `
+            <div class="border ${statusClass} rounded-lg p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="font-semibold">
+                  ${schedule.type === 'mentoring' ? '개별 멘토링' : 
+                    schedule.type === 'career' ? '취업 상담' : schedule.title}
+                </h4>
+                <span class="text-xs ${statusColor}">${statusText}</span>
+              </div>
+              
+              ${schedule.student ? `<p class="text-sm text-gray-600">학생: ${schedule.student}</p>` : ''}
+              ${schedule.mentor ? `<p class="text-sm text-gray-600">멘토: ${schedule.mentor}</p>` : ''}
+              ${schedule.counselor ? `<p class="text-sm text-gray-600">상담사: ${schedule.counselor}</p>` : ''}
+              <p class="text-sm text-gray-600">시간: ${schedule.time}</p>
+              
+              ${schedule.reason ? `<p class="text-xs text-orange-600 mt-2">사유: ${schedule.reason}</p>` : ''}
+              
+              <div class="flex space-x-2 mt-3">
+                <button class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200">
+                  수정
+                </button>
+                ${schedule.status === 'change_requested' ? `
+                  <button class="text-sm bg-green-100 text-green-800 px-3 py-1 rounded hover:bg-green-200">
+                    승인
+                  </button>
+                  <button class="text-sm bg-red-100 text-red-800 px-3 py-1 rounded hover:bg-red-200">
+                    거절
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+        
+        content.innerHTML = html;
+      }
+      
+      modal.classList.remove('hidden');
+    }
+
+    function closeDayModal() {
+      document.getElementById('dayModal').classList.add('hidden');
+    }
+
+    // 모달 외부 클릭시 닫기
+    document.getElementById('dayModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeDayModal();
+      }
+    });
+  </script>
+</body>
+</html> 
