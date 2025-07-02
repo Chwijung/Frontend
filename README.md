@@ -30,7 +30,7 @@ npm install
 npm run dev
 ```
 
-개발 서버가 실행되면 브라우저에서 `http://localhost:5173`으로 접속할 수 있습니다.
+개발 서버가 실행되면 브라우저에서 `http://localhost:3000`으로 접속할 수 있습니다.
 
 ### 사용 가능한 스크립트
 
