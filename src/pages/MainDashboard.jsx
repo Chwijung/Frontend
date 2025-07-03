@@ -114,8 +114,12 @@ function MainDashboard({ navigate }) {
   }
 
   const handleNavigate = (page) => {
-    logger.info('페이지 이동:', page)
-    alert(`${page} 페이지로 이동합니다. (구현 예정)`)
+    if (page === '수강생·조 관리') {
+      navigate('/team-management');
+    } else {
+      logger.info('페이지 이동:', page);
+      alert(`${page} 페이지로 이동합니다. (구현 예정)`);
+    }
   }
 
   return (

@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import MainDashboard from './pages/MainDashboard'
 import CohortDetailPage from './pages/CohortDetailPage'
+import TeamManagement from './pages/TeamManagement'
 
 // TanStack Query 설정
 const queryClient = new QueryClient({
@@ -56,6 +57,9 @@ function AppContent() {
       )}
       {currentRoute.startsWith('/cohort-detail/') && (
         <CohortDetailPage navigate={navigate} />
+      )}
+      {currentRoute === '/team-management' && (
+        <TeamManagement navigate={navigate} />
       )}
     </div>
   )
