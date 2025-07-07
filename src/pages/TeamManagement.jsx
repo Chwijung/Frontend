@@ -1,6 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchStudents, deleteStudent, fetchTeams } from '../services';
 
 // TODO: 실제 데이터/이벤트 핸들러는 추후 구현
+
+// CSV 변환 및 다운로드 함수
+function downloadCSV(students) {
+  if (!students || students.length === 0) return;
+  const header = ['이름', '조', '역할', '이메일', '아이디'];
+  const rows = students.map(s => [
+    s.full_name,
+    s.team_id || '-',
+    s.role === 'student' ? '멤버' : s.role,
+    s.email,
+    s.username
+  ]);
+  const csvContent = [header, ...rows].map(e => e.join(",")).join("\n");
+  const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'students.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+const TEAM_COLORS = [
+  'blue', 'green', 'purple', 'red', 'yellow', 'pink', 'indigo', 'gray'
+];
 
 const TeamManagement = ({ navigate }) => {
   // 더미 상태
@@ -13,85 +41,56 @@ const TeamManagement = ({ navigate }) => {
     personality: false,
   });
 
-  // 더미 팀 데이터
-  const teams = [
-    {
-      id: 1,
-      name: '1조 - AI Innovators',
-      color: 'blue',
-      size: 4,
-      members: [
-        { name: '김하늘', leader: true },
-        { name: '박민서' },
-        { name: '송지우' },
-        { name: '최예린' },
-      ],
-      mentor: '정기수',
-    },
-    {
-      id: 2,
-      name: '2조 - Data Wizards',
-      color: 'green',
-      size: 5,
-      members: [
-        { name: '이현서', leader: true },
-        { name: '최창재' },
-        { name: '배경관' },
-        { name: '한소영' },
-        { name: '김민수' },
-      ],
-      mentor: '김영희',
-    },
-    {
-      id: 3,
-      name: '3조 - Vision Masters',
-      color: 'purple',
-      size: 4,
-      members: [
-        { name: '강민준', leader: true },
-        { name: '윤서진' },
-        { name: '정다은' },
-        { name: '이지원' },
-      ],
-      mentor: '박철수',
-    },
-    {
-      id: 4,
-      name: '4조 - Deep Learners',
-      color: 'red',
-      size: 5,
-      members: [
-        { name: '오태현', leader: true },
-        { name: '이수빈' },
-        { name: '정유진' },
-        { name: '박지민' },
-        { name: '최수연' },
-      ],
-      mentor: '이정훈',
-    },
-  ];
-
-  // 수강생 더미 데이터
+  // 전체 학생 데이터 (대시보드용)
+  const [allStudents, setAllStudents] = useState([]);
+  // 필터링된 학생 데이터 (수강생 관리 테이블용)
+  const [students, setStudents] = useState([]);
   const [studentSearch, setStudentSearch] = useState('');
   const [teamFilter, setTeamFilter] = useState('');
-  const students = [
-    { name: '김하늘', team: '1조', teamColor: 'blue', role: '👑 리더', roleColor: 'yellow', initial: '김', avatarColor: 'bg-blue-500' },
-    { name: '이현서', team: '2조', teamColor: 'green', role: '👑 리더', roleColor: 'yellow', initial: '이', avatarColor: 'bg-green-500' },
-    { name: '강민준', team: '3조', teamColor: 'purple', role: '👑 리더', roleColor: 'yellow', initial: '강', avatarColor: 'bg-purple-500' },
-    { name: '오태현', team: '4조', teamColor: 'red', role: '👑 리더', roleColor: 'yellow', initial: '오', avatarColor: 'bg-red-500' },
-    { name: '김도윤', team: '5조', teamColor: 'yellow', role: '👑 리더', roleColor: 'yellow', initial: '김', avatarColor: 'bg-yellow-500' },
-    { name: '박민서', team: '1조', teamColor: 'blue', role: '멤버', roleColor: 'gray', initial: '박', avatarColor: 'bg-blue-400' },
-    { name: '송지우', team: '1조', teamColor: 'blue', role: '멤버', roleColor: 'gray', initial: '송', avatarColor: 'bg-blue-400' },
-    { name: '최예린', team: '1조', teamColor: 'blue', role: '멤버', roleColor: 'gray', initial: '최', avatarColor: 'bg-blue-400' },
-    { name: '최창재', team: '2조', teamColor: 'green', role: '멤버', roleColor: 'gray', initial: '최', avatarColor: 'bg-green-400' },
-    { name: '배경관', team: '2조', teamColor: 'green', role: '멤버', roleColor: 'gray', initial: '배', avatarColor: 'bg-green-400' },
-  ];
+  const [teams, setTeams] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // 필터링된 학생 목록
-  const filteredStudents = students.filter(s =>
-    (studentSearch === '' || s.name.includes(studentSearch)) &&
-    (teamFilter === '' || s.team === teamFilter + '조')
-  );
+  // TODO: 실제 로그인 토큰 연동 필요 (임시)
+  const token = localStorage.getItem('token');
+
+  // 전체 학생 및 팀 리스트 최초 1회만 불러오기
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    Promise.all([
+      fetchStudents({}, token),
+      fetchTeams()
+    ])
+      .then(([studentsData, teamsData]) => {
+        setAllStudents(studentsData);
+        setTeams([{ id: '', name: '전체 조' }, ...teamsData]);
+      })
+      .catch(() => setError('수강생/조 목록을 불러오지 못했습니다.'))
+      .finally(() => setLoading(false));
+    // eslint-disable-next-line
+  }, []);
+
+  // 필터 적용
+  useEffect(() => {
+    let filtered = allStudents;
+    if (studentSearch) filtered = filtered.filter(s => s.full_name.includes(studentSearch));
+    if (teamFilter) filtered = filtered.filter(s => s.team_id === teamFilter);
+    setStudents(filtered);
+  }, [studentSearch, teamFilter, allStudents]);
+
+  // 삭제 핸들러
+  const handleRemoveStudent = async (userId, name) => {
+    if (!window.confirm(`${name} 학생을 삭제하시겠습니까?`)) return;
+    try {
+      await deleteStudent(userId, token);
+      // 삭제 후 전체 목록 새로고침
+      const data = await fetchStudents({}, token);
+      setAllStudents(data);
+    } catch (err) {
+      alert('삭제에 실패했습니다.');
+    }
+  };
 
   // 더미 핸들러
   const handleFormationMethod = (e) => setFormationMethod(e.target.value);
@@ -99,13 +98,32 @@ const TeamManagement = ({ navigate }) => {
   const handleConsider = (key) => setConsider((prev) => ({ ...prev, [key]: !prev[key] }));
   const handleStudentSearch = (e) => setStudentSearch(e.target.value);
   const handleTeamFilter = (e) => setTeamFilter(e.target.value);
-  const handleExport = () => alert('명단 내보내기 기능은 추후 구현됩니다.');
+  const handleExport = () => {
+    downloadCSV(students);
+  };
   const handleAddStudent = () => alert('수강생 추가 기능은 추후 구현됩니다.');
-  const handleRemoveStudent = (name) => alert(`${name} 삭제 기능은 추후 구현됩니다.`);
 
   const handleGoToDashboard = () => {
     navigate('/main-dashboard');
   };
+
+  // 대시보드용: 전체 학생에서 팀별 그룹핑
+  const teamsMap = {};
+  teams.forEach(team => {
+    if (!team.id) return;
+    teamsMap[team.id] = {
+      id: team.id,
+      name: team.name,
+      members: [],
+    };
+  });
+  allStudents.forEach(s => {
+    if (!s.team_id) return;
+    if (teamsMap[s.team_id]) {
+      teamsMap[s.team_id].members.push(s);
+    }
+  });
+  const dashboardTeams = Object.values(teamsMap).sort((a, b) => (a.name > b.name ? 1 : -1));
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -206,31 +224,32 @@ const TeamManagement = ({ navigate }) => {
             AI-X 3기 조 편성 현황
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {teams.map((team) => (
-              <div key={team.id} className={`border border-${team.color}-200 rounded-lg p-4 bg-${team.color}-50`}>
-                <div className="flex justify-between items-start mb-3">
-                  <div className="flex items-center">
-                    <input type="text" value={team.name} readOnly className={`font-bold text-${team.color}-800 bg-transparent border-b border-${team.color}-300 focus:outline-none focus:border-${team.color}-600`} />
-                  </div>
-                  <span className={`bg-${team.color}-600 text-white px-2 py-1 rounded-full text-xs`}>{team.size}명</span>
-                </div>
-                <div className="space-y-2 text-sm">
-                  {team.members.map((member, idx) => (
-                    <div key={idx} className={`flex items-center justify-between cursor-pointer hover:bg-${team.color}-100 p-1 rounded`}>
-                      <span>{member.name} {member.leader && '👑'}</span>
-                      <button className="text-red-500 hover:text-red-700">✕</button>
+            {dashboardTeams.map((team, idx) => {
+              const color = TEAM_COLORS[idx % TEAM_COLORS.length];
+              return (
+                <div key={team.id} className={`border border-${color}-200 rounded-lg p-4 bg-${color}-50`}>
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex items-center">
+                      <input type="text" value={team.name} readOnly className={`font-bold text-${color}-800 bg-transparent border-b border-${color}-300 focus:outline-none focus:border-${color}-600`} />
                     </div>
-                  ))}
+                    <span className={`bg-${color}-600 text-white px-2 py-1 rounded-full text-xs`}>{team.members.length}명</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    {team.members.map((member, idx2) => (
+                      <div key={member.id} className={`flex items-center justify-between cursor-pointer hover:bg-${color}-100 p-1 rounded`}>
+                        <span>{member.full_name} {member.role === 'leader' && '👑'}</span>
+                        <button className="text-red-500 hover:text-red-700">✕</button>
+                      </div>
+                    ))}
+                  </div>
+                  {/* 멘토 정보는 백엔드에서 추가 제공 시 표시 가능 */}
+                  <div className="mt-3 flex space-x-2">
+                    <button className={`bg-${color}-600 text-white px-3 py-1 rounded text-xs hover:bg-${color}-700`}>관리</button>
+                    <button className="bg-gray-600 text-white px-3 py-1 rounded text-xs hover:bg-gray-700">진행률</button>
+                  </div>
                 </div>
-                <div className="mt-3 text-xs text-gray-600">
-                  <p>담당 멘토: <input type="text" value={team.mentor} readOnly className={`bg-transparent border-b border-gray-300 focus:outline-none focus:border-${team.color}-600 text-gray-800 font-medium`} style={{ width: 60 }} /></p>
-                </div>
-                <div className="mt-3 flex space-x-2">
-                  <button className={`bg-${team.color}-600 text-white px-3 py-1 rounded text-xs hover:bg-${team.color}-700`}>관리</button>
-                  <button className="bg-gray-600 text-white px-3 py-1 rounded text-xs hover:bg-gray-700">진행률</button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -249,50 +268,55 @@ const TeamManagement = ({ navigate }) => {
           <div className="grid md:grid-cols-3 gap-4 mb-6">
             <input type="text" value={studentSearch} onChange={handleStudentSearch} placeholder="이름으로 검색..." className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
             <select value={teamFilter} onChange={handleTeamFilter} className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="">전체 조</option>
-              <option value="1">1조</option>
-              <option value="2">2조</option>
-              <option value="3">3조</option>
-              <option value="4">4조</option>
-              <option value="5">5조</option>
+              {teams.map(team => (
+                <option key={team.id} value={team.id}>{team.name}</option>
+              ))}
             </select>
             <button onClick={handleExport} className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">명단 내보내기</button>
           </div>
-          {/* 수강생 목록 */}
+          {/* 수강생 목록 테이블 */}
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이름</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">조</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">역할</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">삭제</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredStudents.map((s, idx) => (
-                  <tr key={idx}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className={`w-8 h-8 ${s.avatarColor} rounded-full flex items-center justify-center text-white text-sm font-medium`}>{s.initial}</div>
-                        <div className="ml-3">{s.name}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 text-xs font-semibold rounded-full bg-${s.teamColor}-100 text-${s.teamColor}-800`}>{s.team}</span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 text-xs font-semibold rounded-full bg-${s.roleColor}-100 text-${s.roleColor}-800`}>{s.role}</span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex justify-center">
-                        <button onClick={() => handleRemoveStudent(s.name)} className="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
-                      </div>
-                    </td>
+            {loading ? (
+              <div className="text-center py-8">불러오는 중...</div>
+            ) : error ? (
+              <div className="text-center text-red-500 py-8">{error}</div>
+            ) : (
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이름</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">조</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">역할</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">삭제</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {students.length === 0 ? (
+                    <tr><td colSpan={4} className="text-center py-8">수강생이 없습니다.</td></tr>
+                  ) : (
+                    students.map(s => (
+                      <tr key={s.id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">{s.full_name[0]}</div>
+                            <div className="ml-3">{s.full_name}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">{s.team_name || '-'}</span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">{s.role === 'student' ? '멤버' : s.role}</span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                          <button onClick={() => handleRemoveStudent(s.id, s.full_name)} className="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            )}
           </div>
         </section>
       </div>
