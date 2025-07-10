@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchStudents, deleteStudent, fetchTeams } from '../services';
-
-// TODO: 실제 데이터/이벤트 핸들러는 추후 구현
 
 // CSV 변환 및 다운로드 함수
 function downloadCSV(students) {
@@ -31,7 +30,7 @@ const TEAM_COLORS = [
 ];
 
 const TeamManagement = ({ navigate }) => {
-  // 더미 상태
+  // 로컬 UI 상태
   const [formationMethod, setFormationMethod] = useState('balanced');
   const [teamSize, setTeamSize] = useState('5');
   const [consider, setConsider] = useState({
@@ -40,90 +39,73 @@ const TeamManagement = ({ navigate }) => {
     experience: true,
     personality: false,
   });
-
-  // 전체 학생 데이터 (대시보드용)
-  const [allStudents, setAllStudents] = useState([]);
-  // 필터링된 학생 데이터 (수강생 관리 테이블용)
-  const [students, setStudents] = useState([]);
   const [studentSearch, setStudentSearch] = useState('');
   const [teamFilter, setTeamFilter] = useState('');
-  const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  // TODO: 실제 로그인 토큰 연동 필요 (임시)
   const token = localStorage.getItem('token');
+  const queryClient = useQueryClient();
 
-  // 전체 학생 및 팀 리스트 최초 1회만 불러오기
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-    Promise.all([
-      fetchStudents({}, token),
-      fetchTeams()
-    ])
-      .then(([studentsData, teamsData]) => {
-        setAllStudents(studentsData);
-        setTeams([{ id: '', name: '전체 조' }, ...teamsData]);
-      })
-      .catch(() => setError('수강생/조 목록을 불러오지 못했습니다.'))
-      .finally(() => setLoading(false));
-    // eslint-disable-next-line
-  }, []);
+  // 서버 데이터: react-query로 관리
+  const { data: teamsData = [], isLoading: teamsLoading, error: teamsError } = useQuery({
+    queryKey: ['teams'],
+    queryFn: fetchTeams,
+    staleTime: 5 * 60 * 1000,
+  });
 
-  // 필터 적용
-  useEffect(() => {
-    let filtered = allStudents;
+  const { data: studentsData = [], isLoading: studentsLoading, error: studentsError } = useQuery({
+    queryKey: ['students'],
+    queryFn: () => fetchStudents({}, token),
+    staleTime: 1 * 60 * 1000,
+  });
+
+  // 삭제 mutation
+  const deleteStudentMutation = useMutation({
+    mutationFn: (userId) => deleteStudent(userId, token),
+    onSuccess: () => queryClient.invalidateQueries(['students']),
+  });
+
+  // 팀 드롭다운 옵션 ("전체 조" 포함)
+  const teams = useMemo(() => [{ id: '', name: '전체 조' }, ...teamsData], [teamsData]);
+
+  // 필터링된 학생 리스트
+  const students = useMemo(() => {
+    let filtered = studentsData;
     if (studentSearch) filtered = filtered.filter(s => s.full_name.includes(studentSearch));
     if (teamFilter) filtered = filtered.filter(s => s.team_id === teamFilter);
-    setStudents(filtered);
-  }, [studentSearch, teamFilter, allStudents]);
+    return filtered;
+  }, [studentsData, studentSearch, teamFilter]);
 
-  // 삭제 핸들러
+  // 대시보드용 팀별 그룹핑
+  const dashboardTeams = useMemo(() => {
+    const teamsMap = {};
+    (teamsData || []).forEach(team => {
+      if (!team.id) return;
+      teamsMap[team.id] = { id: team.id, name: team.name, members: [] };
+    });
+    (studentsData || []).forEach(s => {
+      if (!s.team_id) return;
+      if (teamsMap[s.team_id]) teamsMap[s.team_id].members.push(s);
+    });
+    return Object.values(teamsMap).sort((a, b) => (a.name > b.name ? 1 : -1));
+  }, [teamsData, studentsData]);
+
+  // 핸들러
   const handleRemoveStudent = async (userId, name) => {
     if (!window.confirm(`${name} 학생을 삭제하시겠습니까?`)) return;
-    try {
-      await deleteStudent(userId, token);
-      // 삭제 후 전체 목록 새로고침
-      const data = await fetchStudents({}, token);
-      setAllStudents(data);
-    } catch (err) {
-      alert('삭제에 실패했습니다.');
-    }
+    await deleteStudentMutation.mutateAsync(userId);
   };
-
-  // 더미 핸들러
   const handleFormationMethod = (e) => setFormationMethod(e.target.value);
   const handleTeamSize = (e) => setTeamSize(e.target.value);
   const handleConsider = (key) => setConsider((prev) => ({ ...prev, [key]: !prev[key] }));
   const handleStudentSearch = (e) => setStudentSearch(e.target.value);
   const handleTeamFilter = (e) => setTeamFilter(e.target.value);
-  const handleExport = () => {
-    downloadCSV(students);
-  };
+  const handleExport = () => downloadCSV(students);
   const handleAddStudent = () => alert('수강생 추가 기능은 추후 구현됩니다.');
+  const handleGoToDashboard = () => navigate('/main-dashboard');
 
-  const handleGoToDashboard = () => {
-    navigate('/main-dashboard');
-  };
-
-  // 대시보드용: 전체 학생에서 팀별 그룹핑
-  const teamsMap = {};
-  teams.forEach(team => {
-    if (!team.id) return;
-    teamsMap[team.id] = {
-      id: team.id,
-      name: team.name,
-      members: [],
-    };
-  });
-  allStudents.forEach(s => {
-    if (!s.team_id) return;
-    if (teamsMap[s.team_id]) {
-      teamsMap[s.team_id].members.push(s);
-    }
-  });
-  const dashboardTeams = Object.values(teamsMap).sort((a, b) => (a.name > b.name ? 1 : -1));
+  // 로딩/에러 처리
+  if (teamsLoading || studentsLoading) return <div>불러오는 중...</div>;
+  if (teamsError || studentsError) return <div>에러 발생: {teamsError?.message || studentsError?.message}</div>;
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -276,10 +258,8 @@ const TeamManagement = ({ navigate }) => {
           </div>
           {/* 수강생 목록 테이블 */}
           <div className="overflow-x-auto">
-            {loading ? (
-              <div className="text-center py-8">불러오는 중...</div>
-            ) : error ? (
-              <div className="text-center text-red-500 py-8">{error}</div>
+            {students.length === 0 ? (
+              <div className="text-center py-8">수강생이 없습니다.</div>
             ) : (
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -291,29 +271,25 @@ const TeamManagement = ({ navigate }) => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {students.length === 0 ? (
-                    <tr><td colSpan={4} className="text-center py-8">수강생이 없습니다.</td></tr>
-                  ) : (
-                    students.map(s => (
-                      <tr key={s.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">{s.full_name[0]}</div>
-                            <div className="ml-3">{s.full_name}</div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">{s.team_name || '-'}</span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">{s.role === 'student' ? '멤버' : s.role}</span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <button onClick={() => handleRemoveStudent(s.id, s.full_name)} className="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
+                  {students.map(s => (
+                    <tr key={s.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">{s.full_name[0]}</div>
+                          <div className="ml-3">{s.full_name}</div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">{s.team_name || '-'}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">{s.role === 'student' ? '멤버' : s.role}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <button onClick={() => handleRemoveStudent(s.id, s.full_name)} className="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             )}
