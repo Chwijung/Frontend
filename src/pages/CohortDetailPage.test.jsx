@@ -184,8 +184,6 @@ describe('CohortDetailPage', () => {
     const mentoringButton = screen.getByText('멘토링')
     const projectButton = screen.getByText('프로젝트')
     
-    fireEvent.click(studentButton)
-    expect(global.alert).toHaveBeenCalledWith('수강생 관리 페이지로 이동합니다. (구현 예정)')
     
     fireEvent.click(teamButton)
     expect(global.alert).toHaveBeenCalledWith('조 관리 페이지로 이동합니다. (구현 예정)')

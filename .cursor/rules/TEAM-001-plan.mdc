@@ -1,0 +1,55 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# TEAM-001 개발 Plan (팀 관리 시스템)
+
+## 목표
+- [team-management.html](mdc:html_code/team-management.html) 페이지를 React 19 + Tailwind CSS 기반으로 변환한다.
+- [development-task.mdc](mdc:development-task.mdc), [tech-stack.mdc](mdc:tech-stack.mdc) 규칙을 반드시 준수한다.
+- React 공식 문서(context7 mcp) Best Practice(컴포넌트 구조, 상태 관리, 리스트 렌더링, 폼, 이벤트, Tailwind 활용 등)를 따른다.
+
+## 주요 작업 단계
+
+1. **컴포넌트 구조 설계**
+   - 메인 컴포넌트: TeamManagementPage
+   - 하위 컴포넌트: TeamFormationForm, TeamDashboard, StudentTable 등으로 분리
+   - 각 컴포넌트는 props/state로 데이터와 이벤트를 주고받음
+
+2. **상태 관리 및 데이터 흐름**
+   - **서버 데이터(팀/학생 등)는 반드시 TanStack Query(react-query)로 관리**
+   - useState, useEffect 등은 로컬 UI 상태(입력값, 모달 등)에만 사용
+   - 팀/학생 데이터는 react-query의 useQuery/useMutation 등으로 fetch/갱신
+   - 리스트 렌더링 시 key는 id 등 고유값 사용
+
+3. **폼/입력/이벤트 처리**
+   - 입력값은 useState로 관리, onChange/onSubmit 등 이벤트 핸들러 구현
+   - select, input 등은 controlled component로 구현
+   - context7 mcp 예시 참고(폼, 리스트, 조건부 렌더링)
+
+4. **UI 스타일링**
+   - Tailwind CSS utility class만 사용 (style={{}} 직접 사용 금지)
+   - 반응형 레이아웃, 컬러, 폰트 등은 HTML 구조와 최대한 동일하게 적용
+
+5. **기능 구현**
+   - 팀 편성 폼: select, checkbox, button 등 폼 요소 구현
+   - 팀 현황 대시보드: 팀별 카드, 멤버 리스트, 멘토 입력 등 구현
+   - 학생 테이블: 검색, 필터, 명단 내보내기 등 구현
+   - 각종 버튼/입력은 React 이벤트로 동작
+
+6. **테스트 및 검증**
+   - 각 컴포넌트별로 상태/이벤트/렌더링 정상 동작 확인
+   - 리스트/폼/조건부 렌더링 등 context7 mcp 예시와 비교 검증
+
+## 참고 규칙/문서
+- [development-task.mdc](mdc:development-task.mdc)
+- [tech-stack.mdc](mdc:tech-stack.mdc)
+- [team-management.html](mdc:html_code/team-management.html)
+- context7 mcp(React 공식 문서) 컴포넌트/상태/이벤트/리스트/폼/스타일링 Best Practice
+
+---
+- **서버 데이터는 반드시 react-query(TanStack Query)로 관리**
+- **로컬 UI 상태만 useState/useEffect 사용**
+- **불필요한 커스텀 훅/라이브러리 사용 금지, 공식 React/Tailwind/react-query만 활용**
+- **코드 예시/패턴은 context7 mcp에서 제시한 방식 우선 적용**
